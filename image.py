@@ -1,8 +1,7 @@
-import asyncio
 import pathlib
 import tempfile
 import uuid
-from playwright.async_api import async_playwright
+import imgkit
 
 # Paths to local Poppins font files in the fonts directory
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
@@ -72,10 +71,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-async def generate_message_image(text: str, name: str = "Askoutbot", compact: bool = True) -> str:
-    import datetime
-
-    sender = name if (name and isinstance(name, str)) else "Askoutbot"
+def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
+    sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
     html_content = HTML_TEMPLATE.format(
         poppins_regular=POPPINS_REGULAR.as_posix(),
@@ -86,25 +83,26 @@ async def generate_message_image(text: str, name: str = "Askoutbot", compact: bo
         message=text.replace("\n", "<br>")
     )
 
-    # Create temp HTML file
+    # Write HTML to a temp file
     temp_dir = tempfile.gettempdir()
     file_id = uuid.uuid4().hex
     html_path = pathlib.Path(temp_dir) / f"msg_{file_id}.html"
     png_path = pathlib.Path(temp_dir) / f"msg_{file_id}.png"
     html_path.write_text(html_content, encoding="utf-8")
 
+    # imgkit options (only supported options for most installs)
+    options = {
+        "format": "png",
+        "width": "500",
+        "encoding": "UTF-8",
+        "quiet": "",
+    }
+
     try:
-        async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            page = await browser.new_page(
-                viewport={"width": 500, "height": 600},
-                device_scale_factor=3
-            )
-            await page.goto(html_path.absolute().as_uri())
-            await page.wait_for_function("document.fonts.ready")
-            element = await page.query_selector("#message-card")
-            await element.screenshot(path=str(png_path), scale="device")
-            await browser.close()
+        imgkit.from_file(str(html_path), str(png_path), options=options)
+        if not png_path.exists() or png_path.stat().st_size == 0:
+            print("❌ Image generation failed: Output PNG not created.")
+            return None
         return str(png_path)
     except Exception as ex:
         print(f"❌ Image generation failed: {ex}")
@@ -114,3 +112,7 @@ async def generate_message_image(text: str, name: str = "Askoutbot", compact: bo
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+# Example usage:
+# img = generate_message_image("Test 😃", "Copilot")
+# print(img)
