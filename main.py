@@ -6,7 +6,7 @@ import aiohttp
 from aiogram import Bot, Dispatcher, Router, F
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, FSInputFile, BotCommand
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, FSInputFile, BotCommand, BotCommandScopeChat
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.context import FSMContext
@@ -449,14 +449,26 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         )
 
 async def set_bot_commands():
-    commands = [
+    # Owner/admin commands (YOUR user id)
+    admin_commands = [
         BotCommand(command="start", description="Get your anonymous link"),
         BotCommand(command="language", description="Set bot language"),
         BotCommand(command="setusername", description="Set your public username"),
         BotCommand(command="stats", description="Show your stats"),
-        BotCommand(command="newsletter", description="(Admin) Newsletter"),
+        BotCommand(command="newsletter", description="Send newsletter to all users (admin)"),
     ]
-    await bot.set_my_commands(commands)
+    # Commands for all other users (no newsletter)
+    user_commands = [
+        BotCommand(command="start", description="Get your anonymous link"),
+        BotCommand(command="language", description="Set bot language"),
+        BotCommand(command="setusername", description="Set your public username"),
+        BotCommand(command="stats", description="Show your stats"),
+    ]
+    # Set for all users (default/global)
+    await bot.set_my_commands(user_commands)
+    # Set for admin only (using admin's user ID)
+    for admin_id in ADMIN_IDS:
+        await bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=admin_id))
 
 if __name__ == "__main__":
     import asyncio
