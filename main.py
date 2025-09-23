@@ -10,16 +10,19 @@ from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, F
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from langs import LANGS, LANG_NAMES
 
-# --- New imports for image and config feature ---
+# --- Settings for admin and logging ---
+LOG_GROUP_ID = -1002054393773
+ADMIN_IDS = [6387028671]
+
 from config import GENERATE_IMAGE_ON_ANONYMOUS, ALLOW_ANONYMOUS_REPLY
 from image import generate_message_image
 import os
 
-# New API token
 API_TOKEN = "8300519461:AAGub3h_FqGkggWkGGE95Pgh8k4u6deI_F4"
 MONGODB_URL = "mongodb+srv://itxcriminal:qureshihashmI1@cluster0.jyqy9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 DB_NAME = "askout"
@@ -37,12 +40,13 @@ dp.include_router(router)
 client = AsyncIOMotorClient(MONGODB_URL)
 db = client[DB_NAME]
 
+class AdminStates(StatesGroup):
+    waiting_for_newsletter_text = State()
+
 def generate_short_username():
-    # Changed prefix from "anon" to "ask"
     return f"ask{secrets.randbelow(100000):05d}"
 
 def today_str():
-    # Fix DeprecationWarning: use timezone-aware UTC
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 async def get_or_create_user(user_id):
@@ -90,14 +94,26 @@ def get_lang_markup():
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-# --- NEW FUNCTION: Store anonymous messages for Mini App ---
+async def log_user_start(user, message):
+    user_info = (
+        f"👤 <b>New user started the bot!</b>\n"
+        f"ID: <code>{user['user_id']}</code>\n"
+        f"Username: @{message.from_user.username or '-'}\n"
+        f"First Name: {message.from_user.first_name or '-'}\n"
+        f"Language: {user.get('language', 'en')}\n"
+        f"Date: <code>{datetime.now(timezone.utc).isoformat()}</code>"
+    )
+    try:
+        await bot.send_message(LOG_GROUP_ID, user_info)
+    except Exception as e:
+        logging.error(f"Failed to log user to log group: {e}")
+
 async def store_anonymous_message(recipient_user_id, message_text, sender_user_id=None):
-    """Store anonymous message in database for Mini App display"""
     message_doc = {
         "recipient_user_id": recipient_user_id,
         "message_text": message_text,
         "sender_user_id": sender_user_id,
-        "timestamp": datetime.now(timezone.utc),  # Fix DeprecationWarning
+        "timestamp": datetime.now(timezone.utc),
         "message_type": "anonymous"
     }
     try:
@@ -106,7 +122,6 @@ async def store_anonymous_message(recipient_user_id, message_text, sender_user_i
     except Exception as e:
         logging.error(f"Failed to store anonymous message: {e}")
 
-# --- Helper to send thumbs up reaction using the raw Bot API (Bot API 7.0+ only) ---
 async def set_reaction(bot, chat_id, message_id, emoji):
     token = bot.token
     url = f"https://api.telegram.org/bot{token}/setMessageReaction"
@@ -160,6 +175,7 @@ async def language_selected(callback_query, state: FSMContext):
             "link_clicks_daily": {},
             "language": lang_code
         })
+        user = await db.users.find_one({"user_id": callback_query.from_user.id})
     else:
         await db.users.update_one(
             {"user_id": callback_query.from_user.id},
@@ -183,7 +199,6 @@ async def language_selected(callback_query, state: FSMContext):
         await state.update_data(start_param=None)
         return
 
-    # If no start_param, show welcome and user own link
     bot_username = (await bot.me()).username
     user_short_username = await get_or_create_user(callback_query.from_user.id)
     link = f"https://t.me/{bot_username}?start={user_short_username}"
@@ -200,6 +215,9 @@ async def start_with_param(message: Message, command: CommandStart, state: FSMCo
     if not user:
         await state.update_data(start_param=link_id)
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
+        user = await db.users.find_one({"user_id": message.from_user.id})
+        if user:
+            await log_user_start(user, message)
         return
     lang = await get_user_lang(message.from_user.id)
     if link_id:
@@ -226,6 +244,9 @@ async def start_with_param(message: Message, command: CommandStart, state: FSMCo
             LANGS[lang]["welcome"].format(link=link),
             reply_markup=get_share_keyboard(link, lang)
         )
+    user = await db.users.find_one({"user_id": message.from_user.id})
+    if user:
+        await log_user_start(user, message)
 
 @router.message(CommandStart(deep_link=False))
 async def start_no_param(message: Message, state: FSMContext):
@@ -233,6 +254,9 @@ async def start_no_param(message: Message, state: FSMContext):
     if not user:
         await state.clear()
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
+        user = await db.users.find_one({"user_id": message.from_user.id})
+        if user:
+            await log_user_start(user, message)
         return
     lang = await get_user_lang(message.from_user.id)
     user_short_username = await get_or_create_user(message.from_user.id)
@@ -242,6 +266,37 @@ async def start_no_param(message: Message, state: FSMContext):
         LANGS[lang]["welcome"].format(link=link),
         reply_markup=get_share_keyboard(link, lang)
     )
+    await state.clear()
+    user = await db.users.find_one({"user_id": message.from_user.id})
+    if user:
+        await log_user_start(user, message)
+
+@router.message(Command("newsletter"))
+async def newsletter_command(message: Message, state: FSMContext):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer("❌ You are not authorized to use this command.")
+        return
+    total_users = await db.users.count_documents({})
+    await message.answer(
+        f"📰 <b>Newsletter Mode</b>\nTotal users: <b>{total_users}</b>\n\nSend the newsletter text to broadcast to all users."
+    )
+    await state.set_state(AdminStates.waiting_for_newsletter_text)
+
+@router.message(AdminStates.waiting_for_newsletter_text)
+async def send_newsletter(message: Message, state: FSMContext):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer("❌ You are not authorized to use this command.")
+        return
+    newsletter_text = message.text
+    users_cursor = db.users.find({}, {"user_id": 1})
+    count = 0
+    async for user in users_cursor:
+        try:
+            await bot.send_message(user["user_id"], newsletter_text)
+            count += 1
+        except Exception as e:
+            logging.warning(f"Failed to send newsletter to {user['user_id']}: {e}")
+    await message.answer(f"✅ Newsletter sent to {count} users.")
     await state.clear()
 
 @router.message(F.reply_to_message)
@@ -261,7 +316,6 @@ async def handle_reply(message: Message):
                 orig_sender_id,
                 f"📩 <b>You received a reply to your anonymous message:</b>\n\n{message.text}"
             )
-            # Insert mapping for the reply message, so the thread can continue
             await db.anonymous_links.insert_one({
                 "reply_message_id": sent.message_id,
                 "to_user_id": orig_sender_id,
@@ -336,14 +390,12 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
 
         sent_msg = None
 
-        # --- STORE THE ANONYMOUS MESSAGE FOR MINI APP ---
         await store_anonymous_message(
             recipient_user_id=user["user_id"],
             message_text=message.text,
             sender_user_id=message.from_user.id
         )
 
-        # If image generation is ON, send only image with caption
         if GENERATE_IMAGE_ON_ANONYMOUS:
             image_path = await generate_message_image(message.text)
             caption = LANGS[user.get('language', 'en')]['anonymous_received']
@@ -368,7 +420,6 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
                 LANGS[user.get('language', 'en')]['anonymous_received'].format(message=message.text)
             )
 
-        # Store mapping for reply (on image or fallback text message)
         if sent_msg:
             await db.anonymous_links.insert_one({
                 "reply_message_id": sent_msg.message_id,
@@ -396,12 +447,12 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         )
 
 async def set_bot_commands():
-    # List your commands here, update as needed
     commands = [
         BotCommand(command="start", description="Get your anonymous link"),
         BotCommand(command="language", description="Set bot language"),
         BotCommand(command="setusername", description="Set your public username"),
         BotCommand(command="stats", description="Show your stats"),
+        BotCommand(command="newsletter", description="(Admin) Newsletter"),
     ]
     await bot.set_my_commands(commands)
 
@@ -409,7 +460,7 @@ if __name__ == "__main__":
     import asyncio
 
     async def main():
-        await set_bot_commands()  # Sync commands to Telegram
+        await set_bot_commands()
         await dp.start_polling(bot)
 
     asyncio.run(main())
