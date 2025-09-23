@@ -72,10 +72,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-async def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
+async def generate_message_image(text: str, name: str = "askoutbot", compact: bool = True) -> str:
     import datetime
 
-    sender = name if (name and isinstance(name, str)) else "Anonymous"
+    sender = name if (name and isinstance(name, str)) else "askoutbot"
     timestamp = "Just now"
     html_content = HTML_TEMPLATE.format(
         poppins_regular=POPPINS_REGULAR.as_posix(),
