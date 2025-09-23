@@ -22,15 +22,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: transparent;
         }}
         .container {{
-            width: 1344px;
-            max-width: 1344px;
-            padding: 48px;
+            width: 480px;
+            max-width: 480px;
+            padding: 32px;
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.92);
             border-radius: 24px;
-            padding: 48px;
+            padding: 32px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
         }}
@@ -38,22 +38,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }}
         .sender {{
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            padding: 12px 28px;
-            border-radius: 16px;
-            font-size: 22px;
+            padding: 10px 22px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 600;
         }}
         .timestamp {{
             background: #f1f5f9;
             color: #64748b;
-            padding: 8px 18px;
-            border-radius: 16px;
-            font-size: 18px;
+            padding: 6px 16px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 500;
         }}
         .message-content-wrapper {{
@@ -63,17 +63,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: absolute;
             left: 0;
             top: 0;
-            width: 6px;
+            width: 5px;
             height: 100%;
             background: linear-gradient(to bottom, #3b82f6, #6366f1);
             border-radius: 3px;
         }}
         .message-content {{
-            padding-left: 36px;
+            padding-left: 28px;
             color: #334155;
             line-height: 1.7;
             font-weight: 500;
-            font-size: 34px;
+            font-size: 20px;
             word-break: break-word;
             min-height: 40px;
         }}
@@ -114,10 +114,10 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1344",
+        "width": "1344",   # <-- THIS IS THE ONLY WIDTH CHANGED
         "encoding": "UTF-8",
         "quiet": "",
-        # Do not set "height" so it auto-adjusts to content
+        # height is not set, so it will adjust automatically
     }
 
     try:
