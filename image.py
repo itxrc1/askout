@@ -8,7 +8,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
-    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {{
@@ -109,12 +108,11 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "400",
-        "zoom": "2",   # <--- High quality: renders at 2x, keeps image size the same
+        "width": "400",    # Output image width in pixels
+        "zoom": "2",       # Render at 2x for high density
         "encoding": "UTF-8",
         "quiet": "",
-        # "quality": "100",  # Uncomment if you want, but for PNG it's not relevant
-        # "dpi": "300",      # Uncomment if your wkhtmltoimage supports it, for even sharper output
+        # "dpi": "300",    # Uncomment if your wkhtmltoimage supports it
     }
 
     try:
@@ -131,7 +129,3 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
-
-# Example usage:
-# img = generate_message_image("Hello 😃👍🏼🚀", "Copilot")
-# print(img)
