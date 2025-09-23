@@ -16,10 +16,10 @@ from langs import LANGS, LANG_NAMES
 
 # --- New imports for image and config feature ---
 from config import GENERATE_IMAGE_ON_ANONYMOUS, ALLOW_ANONYMOUS_REPLY
-from image import generate_message_image
+from image import generate_message_image  # <-- renamed and updated import
 import os
 
-API_TOKEN = "8300519461:AAGub3h_FqGkggWkGGE95Pgh8k4u6deI_F4"
+API_TOKEN = "8032679205:AAHFMO9t-T7Lavbbf_noiePQoniDSHzSuVA"
 MONGODB_URL = "mongodb+srv://itxcriminal:qureshihashmI1@cluster0.jyqy9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 DB_NAME = "askout"
 
@@ -343,7 +343,7 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
 
         # If image generation is ON, send only image with caption
         if GENERATE_IMAGE_ON_ANONYMOUS:
-            image_path = generate_message_image(message.text)
+            image_path = await generate_message_image(message.text)  # <-- FIX: await here
             caption = LANGS[user.get('language', 'en')]['anonymous_received']
             if image_path:
                 try:
