@@ -3,7 +3,6 @@ import tempfile
 import uuid
 import imgkit
 
-# Paths to local Poppins font files in the fonts directory
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
 FONTS_DIR = BASE_DIR / "fonts"
 POPPINS_REGULAR = FONTS_DIR / "Poppins-Regular.ttf"
@@ -90,21 +89,12 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
     png_path = pathlib.Path(temp_dir) / f"msg_{file_id}.png"
     html_path.write_text(html_content, encoding="utf-8")
 
-    # imgkit options
     options = {
-        # Transparent PNG background (needs patched wkhtmltoimage)
         "format": "png",
         "width": "500",
         "encoding": "UTF-8",
-        # Uncomment below to enable transparency if patched wkhtmltoimage is available
-        # "transparent": "",
-        # For best emoji support, ensure emoji fonts are installed on your system!
-        "quiet": "",
-        "disable-smart-width": "",
-        "custom-header": "",
-        "custom-header-propagation": "",
-        # Zoom if you want higher-res
-        # "zoom": "2"
+        "quiet": ""
+        # Don't include unsupported options like "disable-smart-width"
     }
 
     try:
@@ -119,6 +109,6 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
         except Exception:
             pass
 
-# Example usage:
-# path = generate_message_image("Hello world! 😃", "User123")
-# print(path)
+# Usage example (sync, not async!):
+# image_path = generate_message_image("Hello world! 😃", "User123")
+# print(image_path)
