@@ -25,7 +25,7 @@ import os
 
 API_TOKEN = "8300519461:AAGub3h_FqGkggWkGGE95Pgh8k4u6deI_F4"
 MONGODB_URL = "mongodb+srv://itxcriminal:qureshihashmI1@cluster0.jyqy9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-DB_NAME = "askout"
+DB_NAME = "askout2"
 
 logging.basicConfig(level=logging.INFO)
 
