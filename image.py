@@ -18,17 +18,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <style>
         @font-face {{
             font-family: 'Poppins';
-            src: url('file://{poppins_regular}') format('truetype');
+            src: url('{poppins_regular}') format('truetype');
             font-weight: 400;
         }}
         @font-face {{
             font-family: 'Poppins';
-            src: url('file://{poppins_medium}') format('truetype');
+            src: url('{poppins_medium}') format('truetype');
             font-weight: 500;
         }}
         @font-face {{
             font-family: 'Poppins';
-            src: url('file://{poppins_semibold}') format('truetype');
+            src: url('{poppins_semibold}') format('truetype');
             font-weight: 600;
         }}
         body {{
@@ -74,23 +74,27 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
+    # Compose ABSOLUTE file:// URLs for fonts
+    poppins_regular = "file://" + str(POPPINS_REGULAR.resolve())
+    poppins_medium = "file://" + str(POPPINS_MEDIUM.resolve())
+    poppins_semibold = "file://" + str(POPPINS_SEMIBOLD.resolve())
+
     html_content = HTML_TEMPLATE.format(
-        poppins_regular=POPPINS_REGULAR.as_posix(),
-        poppins_medium=POPPINS_MEDIUM.as_posix(),
-        poppins_semibold=POPPINS_SEMIBOLD.as_posix(),
+        poppins_regular=poppins_regular,
+        poppins_medium=poppins_medium,
+        poppins_semibold=poppins_semibold,
         sender=sender,
         timestamp=timestamp,
         message=text.replace("\n", "<br>")
     )
 
-    # Write HTML to a temp file
+    # Create temp HTML file
     temp_dir = tempfile.gettempdir()
     file_id = uuid.uuid4().hex
     html_path = pathlib.Path(temp_dir) / f"msg_{file_id}.html"
     png_path = pathlib.Path(temp_dir) / f"msg_{file_id}.png"
     html_path.write_text(html_content, encoding="utf-8")
 
-    # imgkit options (only supported options for most installs)
     options = {
         "format": "png",
         "width": "500",
