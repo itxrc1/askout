@@ -47,7 +47,7 @@ def generate_short_username():
     return f"ask{secrets.randbelow(100000):05d}"
 
 def today_str():
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return datetime.now(timezone.utc).strftime("%d %b %Y, %H:%M UTC")
 
 async def get_or_create_user(user_id):
     user = await db.users.find_one({"user_id": user_id})
@@ -95,13 +95,18 @@ def get_lang_markup():
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 async def log_user_start(user, message):
+    # Get description/bio if available, else "-"
+    user_description = getattr(message.from_user, "bio", "-") if hasattr(message.from_user, "bio") else "-"
+    now = datetime.now(timezone.utc)
+    formatted_date = now.strftime("%d %b %Y, %H:%M UTC")
     user_info = (
-        f"👤 <b>New user started the bot!</b>\n"
-        f"ID: <code>{user['user_id']}</code>\n"
-        f"Username: @{message.from_user.username or '-'}\n"
-        f"First Name: {message.from_user.first_name or '-'}\n"
-        f"Language: {user.get('language', 'en')}\n"
-        f"Date: <code>{datetime.now(timezone.utc).isoformat()}</code>"
+        f"👤 <b>Bot started</b>\n"
+        f"<b>ID:</b> <code>{user['user_id']}</code>\n"
+        f"<b>Username:</b> <code>@{message.from_user.username or '-'}</code>\n"
+        f"<b>First Name:</b> <code>{message.from_user.first_name or '-'}</code>\n"
+        f"<b>Description:</b> <code>{user_description}</code>\n"
+        f"<b>Language:</b> <code>{user.get('language', 'en')}</code>\n"
+        f"<b>Date:</b> <code>{formatted_date}</code>"
     )
     try:
         await bot.send_message(LOG_GROUP_ID, user_info)
@@ -159,6 +164,7 @@ async def language_selected(callback_query, state: FSMContext):
 
     # Create user if not exists
     user = await db.users.find_one({"user_id": callback_query.from_user.id})
+    is_new = False
     if not user:
         while True:
             short_username = generate_short_username()
@@ -176,6 +182,7 @@ async def language_selected(callback_query, state: FSMContext):
             "language": lang_code
         })
         user = await db.users.find_one({"user_id": callback_query.from_user.id})
+        is_new = True
     else:
         await db.users.update_one(
             {"user_id": callback_query.from_user.id},
@@ -184,6 +191,9 @@ async def language_selected(callback_query, state: FSMContext):
         short_username = user.get("short_username") or user.get("link_id")
 
     await callback_query.answer()
+
+    if is_new:
+        await log_user_start(user, callback_query.message)
 
     if start_param:
         target_user = await get_user_by_link_id(start_param)
@@ -215,10 +225,9 @@ async def start_with_param(message: Message, command: CommandStart, state: FSMCo
     if not user:
         await state.update_data(start_param=link_id)
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
-        user = await db.users.find_one({"user_id": message.from_user.id})
-        if user:
-            await log_user_start(user, message)
+        # Logging will be done after language is set (in setlang handler)
         return
+    await log_user_start(user, message)
     lang = await get_user_lang(message.from_user.id)
     if link_id:
         user = await get_user_by_link_id(link_id)
@@ -244,9 +253,6 @@ async def start_with_param(message: Message, command: CommandStart, state: FSMCo
             LANGS[lang]["welcome"].format(link=link),
             reply_markup=get_share_keyboard(link, lang)
         )
-    user = await db.users.find_one({"user_id": message.from_user.id})
-    if user:
-        await log_user_start(user, message)
 
 @router.message(CommandStart(deep_link=False))
 async def start_no_param(message: Message, state: FSMContext):
@@ -254,10 +260,9 @@ async def start_no_param(message: Message, state: FSMContext):
     if not user:
         await state.clear()
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
-        user = await db.users.find_one({"user_id": message.from_user.id})
-        if user:
-            await log_user_start(user, message)
+        # Logging will be done after language is set (in setlang handler)
         return
+    await log_user_start(user, message)
     lang = await get_user_lang(message.from_user.id)
     user_short_username = await get_or_create_user(message.from_user.id)
     bot_username = (await bot.me()).username
@@ -267,9 +272,6 @@ async def start_no_param(message: Message, state: FSMContext):
         reply_markup=get_share_keyboard(link, lang)
     )
     await state.clear()
-    user = await db.users.find_one({"user_id": message.from_user.id})
-    if user:
-        await log_user_start(user, message)
 
 @router.message(Command("newsletter"))
 async def newsletter_command(message: Message, state: FSMContext):
