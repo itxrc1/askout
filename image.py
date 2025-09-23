@@ -110,9 +110,11 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
     options = {
         "format": "png",
         "width": "400",
+        "zoom": "2",   # <--- High quality: renders at 2x, keeps image size the same
         "encoding": "UTF-8",
         "quiet": "",
-        # height is not set, so it will adjust automatically
+        # "quality": "100",  # Uncomment if you want, but for PNG it's not relevant
+        # "dpi": "300",      # Uncomment if your wkhtmltoimage supports it, for even sharper output
     }
 
     try:
