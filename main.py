@@ -16,7 +16,7 @@ from langs import LANGS, LANG_NAMES
 
 # --- New imports for image and config feature ---
 from config import GENERATE_IMAGE_ON_ANONYMOUS, ALLOW_ANONYMOUS_REPLY
-from image_utils import generate_message_image
+from image import generate_message_image
 import os
 
 API_TOKEN = "8032679205:AAHFMO9t-T7Lavbbf_noiePQoniDSHzSuVA"
