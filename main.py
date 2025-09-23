@@ -1,7 +1,7 @@
 import logging
 import secrets
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 import aiohttp
 from aiogram import Bot, Dispatcher, Router, F
 from aiogram.enums import ParseMode
@@ -16,9 +16,10 @@ from langs import LANGS, LANG_NAMES
 
 # --- New imports for image and config feature ---
 from config import GENERATE_IMAGE_ON_ANONYMOUS, ALLOW_ANONYMOUS_REPLY
-from image import generate_message_image  # <-- renamed and updated import
+from image import generate_message_image
 import os
 
+# New API token
 API_TOKEN = "8300519461:AAGub3h_FqGkggWkGGE95Pgh8k4u6deI_F4"
 MONGODB_URL = "mongodb+srv://itxcriminal:qureshihashmI1@cluster0.jyqy9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 DB_NAME = "askout"
@@ -41,7 +42,8 @@ def generate_short_username():
     return f"ask{secrets.randbelow(100000):05d}"
 
 def today_str():
-    return datetime.utcnow().strftime("%Y-%m-%d")
+    # Fix DeprecationWarning: use timezone-aware UTC
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 async def get_or_create_user(user_id):
     user = await db.users.find_one({"user_id": user_id})
@@ -95,7 +97,7 @@ async def store_anonymous_message(recipient_user_id, message_text, sender_user_i
         "recipient_user_id": recipient_user_id,
         "message_text": message_text,
         "sender_user_id": sender_user_id,
-        "timestamp": datetime.utcnow(),
+        "timestamp": datetime.now(timezone.utc),  # Fix DeprecationWarning
         "message_type": "anonymous"
     }
     try:
@@ -343,7 +345,7 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
 
         # If image generation is ON, send only image with caption
         if GENERATE_IMAGE_ON_ANONYMOUS:
-            image_path = await generate_message_image(message.text)  # <-- FIX: await here
+            image_path = await generate_message_image(message.text)
             caption = LANGS[user.get('language', 'en')]['anonymous_received']
             if image_path:
                 try:
