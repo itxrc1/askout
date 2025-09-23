@@ -25,7 +25,7 @@ import os
 
 API_TOKEN = "8300519461:AAGub3h_FqGkggWkGGE95Pgh8k4u6deI_F4"
 MONGODB_URL = "mongodb+srv://itxcriminal:qureshihashmI1@cluster0.jyqy9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-DB_NAME = "askout2"
+DB_NAME = "askout"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -94,17 +94,14 @@ def get_lang_markup():
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-async def log_user_start(user, message):
-    # Get description/bio if available, else "-"
-    user_description = getattr(message.from_user, "bio", "-") if hasattr(message.from_user, "bio") else "-"
+async def log_user_start(user, user_obj):
     now = datetime.now(timezone.utc)
     formatted_date = now.strftime("%d %b %Y, %H:%M UTC")
     user_info = (
         f"👤 <b>Bot started</b>\n"
         f"<b>ID:</b> <code>{user['user_id']}</code>\n"
-        f"<b>Username:</b> <code>@{message.from_user.username or '-'}</code>\n"
-        f"<b>First Name:</b> <code>{message.from_user.first_name or '-'}</code>\n"
-        f"<b>Description:</b> <code>{user_description}</code>\n"
+        f"<b>Username:</b> <code>@{user_obj.username or '-'}</code>\n"
+        f"<b>First Name:</b> <code>{user_obj.first_name or '-'}</code>\n"
         f"<b>Language:</b> <code>{user.get('language', 'en')}</code>\n"
         f"<b>Date:</b> <code>{formatted_date}</code>"
     )
@@ -193,7 +190,7 @@ async def language_selected(callback_query, state: FSMContext):
     await callback_query.answer()
 
     if is_new:
-        await log_user_start(user, callback_query.message)
+        await log_user_start(user, callback_query.from_user)
 
     if start_param:
         target_user = await get_user_by_link_id(start_param)
@@ -227,7 +224,7 @@ async def start_with_param(message: Message, command: CommandStart, state: FSMCo
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
         # Logging will be done after language is set (in setlang handler)
         return
-    await log_user_start(user, message)
+    await log_user_start(user, message.from_user)
     lang = await get_user_lang(message.from_user.id)
     if link_id:
         user = await get_user_by_link_id(link_id)
@@ -262,7 +259,7 @@ async def start_no_param(message: Message, state: FSMContext):
         await message.answer(LANGS["en"]["choose_lang"], reply_markup=get_lang_markup())
         # Logging will be done after language is set (in setlang handler)
         return
-    await log_user_start(user, message)
+    await log_user_start(user, message.from_user)
     lang = await get_user_lang(message.from_user.id)
     user_short_username = await get_or_create_user(message.from_user.id)
     bot_username = (await bot.me()).username
