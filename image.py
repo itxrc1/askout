@@ -4,13 +4,34 @@ import tempfile
 import uuid
 from playwright.async_api import async_playwright
 
+# Path to fonts relative to this file
+BASE_DIR = pathlib.Path(__file__).parent.resolve()
+FONTS_DIR = BASE_DIR / "fonts"
+POPPINS_REGULAR = FONTS_DIR / "Poppins-Regular.ttf"
+POPPINS_MEDIUM = FONTS_DIR / "Poppins-Medium.ttf"
+POPPINS_SEMIBOLD = FONTS_DIR / "Poppins-SemiBold.ttf"
+
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        @font-face {{
+            font-family: 'Poppins';
+            src: url('file://{poppins_regular}') format('truetype');
+            font-weight: 400;
+        }}
+        @font-face {{
+            font-family: 'Poppins';
+            src: url('file://{poppins_medium}') format('truetype');
+            font-weight: 500;
+        }}
+        @font-face {{
+            font-family: 'Poppins';
+            src: url('file://{poppins_semibold}') format('truetype');
+            font-weight: 600;
+        }}
         body {{
             margin: 0;
             padding: 0;
@@ -57,6 +78,9 @@ async def generate_message_image(text: str, name: str = "Anonymous", compact: bo
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
     html_content = HTML_TEMPLATE.format(
+        poppins_regular=POPPINS_REGULAR.as_posix(),
+        poppins_medium=POPPINS_MEDIUM.as_posix(),
+        poppins_semibold=POPPINS_SEMIBOLD.as_posix(),
         sender=sender,
         timestamp=timestamp,
         message=text.replace("\n", "<br>")
