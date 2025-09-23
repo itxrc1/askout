@@ -8,6 +8,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
+    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {{
@@ -17,15 +18,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: transparent;
         }}
         .container {{
-            width: 400px;
+            width: 600px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 36px;
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 36px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
         }}
@@ -33,22 +34,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }}
         .sender {{
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 600;
         }}
         .timestamp {{
             background: #f1f5f9;
             color: #64748b;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 500;
         }}
         .message-content-wrapper {{
@@ -58,17 +59,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: absolute;
             left: 0;
             top: 0;
-            width: 4px;
+            width: 5px;
             height: 100%;
             background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 2px;
+            border-radius: 2.5px;
         }}
         .message-content {{
-            padding-left: 24px;
+            padding-left: 28px;
             color: #334155;
-            line-height: 1.6;
+            line-height: 1.7;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 22px;
             word-break: break-word;
         }}
     </style>
@@ -108,11 +109,9 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "400",    # Output image width in pixels
-        "zoom": "2",       # Render at 2x for high density
+        "width": "600",   # matches the HTML container width
         "encoding": "UTF-8",
         "quiet": "",
-        # "dpi": "300",    # Uncomment if your wkhtmltoimage supports it
     }
 
     try:
@@ -129,3 +128,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+# Example usage:
+# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
+# print(img)
