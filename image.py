@@ -15,45 +15,41 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
             background: transparent;
         }}
         .container {{
-            width: 480px;
-            max-width: 480px;
-            padding: 32px;
+            width: 400px;
+            margin: 0 auto;
+            padding: 24px;
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
         }}
         .message-card {{
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
         }}
         .header {{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }}
         .sender {{
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            padding: 10px 22px;
-            border-radius: 14px;
-            font-size: 16px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
         }}
         .timestamp {{
             background: #f1f5f9;
             color: #64748b;
-            padding: 6px 16px;
-            border-radius: 14px;
-            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
         }}
         .message-content-wrapper {{
@@ -63,19 +59,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: absolute;
             left: 0;
             top: 0;
-            width: 5px;
+            width: 4px;
             height: 100%;
             background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 3px;
+            border-radius: 2px;
         }}
         .message-content {{
-            padding-left: 28px;
+            padding-left: 24px;
             color: #334155;
-            line-height: 1.7;
+            line-height: 1.6;
             font-weight: 500;
-            font-size: 20px;
+            font-size: 16px;
             word-break: break-word;
-            min-height: 40px;
         }}
     </style>
 </head>
@@ -114,7 +109,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1344",   # <-- THIS IS THE ONLY WIDTH CHANGED
+        "width": "400",
         "encoding": "UTF-8",
         "quiet": "",
         # height is not set, so it will adjust automatically
