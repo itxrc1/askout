@@ -1,8 +1,7 @@
-import asyncio
 import pathlib
 import tempfile
 import uuid
-from playwright.async_api import async_playwright
+import imgkit
 
 # Paths to local Poppins font files in the fonts directory
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
@@ -72,9 +71,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-async def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
-    import datetime
-
+def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
     html_content = HTML_TEMPLATE.format(
@@ -93,18 +90,25 @@ async def generate_message_image(text: str, name: str = "Anonymous", compact: bo
     png_path = pathlib.Path(temp_dir) / f"msg_{file_id}.png"
     html_path.write_text(html_content, encoding="utf-8")
 
+    # imgkit options
+    options = {
+        # Transparent PNG background (needs patched wkhtmltoimage)
+        "format": "png",
+        "width": "500",
+        "encoding": "UTF-8",
+        # Uncomment below to enable transparency if patched wkhtmltoimage is available
+        # "transparent": "",
+        # For best emoji support, ensure emoji fonts are installed on your system!
+        "quiet": "",
+        "disable-smart-width": "",
+        "custom-header": "",
+        "custom-header-propagation": "",
+        # Zoom if you want higher-res
+        # "zoom": "2"
+    }
+
     try:
-        async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            page = await browser.new_page(
-                viewport={"width": 500, "height": 600},
-                device_scale_factor=3
-            )
-            await page.goto(html_path.absolute().as_uri())
-            await page.wait_for_function("document.fonts.ready")
-            element = await page.query_selector("#message-card")
-            await element.screenshot(path=str(png_path), scale="device")
-            await browser.close()
+        imgkit.from_file(str(html_path), str(png_path), options=options)
         return str(png_path)
     except Exception as ex:
         print(f"❌ Image generation failed: {ex}")
@@ -114,3 +118,7 @@ async def generate_message_image(text: str, name: str = "Anonymous", compact: bo
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+# Example usage:
+# path = generate_message_image("Hello world! 😃", "User123")
+# print(path)
