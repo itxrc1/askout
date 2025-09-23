@@ -396,7 +396,8 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         )
 
         if GENERATE_IMAGE_ON_ANONYMOUS:
-            image_path = await generate_message_image(message.text)
+            # FIX: generate_message_image is now a synchronous function (imgkit)!
+            image_path = generate_message_image(message.text)
             caption = LANGS[user.get('language', 'en')]['anonymous_received']
             if image_path:
                 try:
