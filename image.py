@@ -14,94 +14,82 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(160deg, #0ea5e9 0%, #0369a1 100%);
+            background: transparent;
         }}
-        .canvas {{
+        .container {{
             width: 1200px;
             margin: 0 auto;
-            padding: 80px 0;
+            padding: 64px;
+            background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
         }}
         .message-card {{
-            position: relative;
-            max-width: 860px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 60px 72px 76px;
-            box-shadow: 0 35px 70px rgba(3, 54, 94, 0.28);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 36px;
+            padding: 64px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(16px);
         }}
-        .message-card::after {{
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: -28px;
-            transform: translateX(-50%) rotate(45deg);
-            width: 56px;
-            height: 56px;
-            background: #ffffff;
-            box-shadow: 12px 12px 30px rgba(3, 54, 94, 0.18);
-        }}
-        .message-title {{
-            margin: 0;
-            font-size: 54px;
-            font-weight: 700;
-            color: #0f172a;
-            text-align: center;
-        }}
-        .message-divider {{
-            width: 100%;
-            height: 1px;
-            background: #e2e8f0;
-            margin: 34px 0;
-        }}
-        .message-body {{
-            margin: 0;
-            font-size: 34px;
-            line-height: 1.6;
-            color: #334155;
-            text-align: center;
-            word-break: break-word;
-        }}
-        .message-meta {{
-            margin-top: 26px;
-            font-size: 24px;
-            color: #94a3b8;
-            text-align: center;
-            font-weight: 500;
-        }}
-        .message-stars {{
-            margin-top: 42px;
+        .header {{
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 14px;
+            justify-content: space-between;
+            margin-bottom: 40px;
         }}
-        .message-stars span {{
-            font-size: 42px;
-            color: #f59e0b;
+        .sender {{
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 18px 36px;
+            border-radius: 24px;
+            font-size: 40px;
+            font-weight: 700;
+        }}
+        .timestamp {{
+            background: #f1f5f9;
+            color: #475569;
+            padding: 12px 28px;
+            border-radius: 20px;
+            font-size: 22px;
+            font-weight: 500;
+        }}
+        .message-content-wrapper {{
+            position: relative;
+        }}
+        .message-gradient {{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, #2563eb, #7c3aed);
+            border-radius: 4px;
+        }}
+        .message-content {{
+            padding-left: 48px;
+            color: #1e293b;
+            line-height: 1.9;
+            font-weight: 500;
+            font-size: 46px;
+            word-break: break-word;
         }}
         img.emoji {{
-            height: 1.15em;
-            width: 1.15em;
+            height: 1.1em;
+            width: 1.1em;
             margin: 0 .05em;
-            vertical-align: -0.18em;
+            vertical-align: -0.15em;
         }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="canvas" id="message-card">
+    <div class="container" id="message-card">
         <div class="message-card">
-            <h1 class="message-title">{sender}</h1>
-            <div class="message-divider"></div>
-            <p class="message-body">{message}</p>
-            <div class="message-meta">{timestamp}</div>
-            <div class="message-stars">
-                <span>★</span>
-                <span>★</span>
-                <span>★</span>
-                <span>★</span>
-                <span>★</span>
+            <div class="header">
+                <div class="sender">{sender}</div>
+                <div class="timestamp">{timestamp}</div>
+            </div>
+            <div class="message-content-wrapper">
+                <div class="message-gradient"></div>
+                <div class="message-content">{message}</div>
             </div>
         </div>
     </div>
