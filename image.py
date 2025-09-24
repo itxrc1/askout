@@ -21,7 +21,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #FFF5EF;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,7 +31,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: relative;
             width: 1200px;
             padding: 96px 88px 120px;
-            background: #FFF5EF;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 56px;
         }}
         .stage::before {{
@@ -48,15 +48,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card {{
             position: relative;
             background: #FFFFFF;
-            border: 3px solid #D44A52;
+            border: 3px solid #89f7fe;
             border-radius: 36px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
+            box-shadow: 0 28px 70px rgba(137, 247, 254, 0.15);
         }}
-        /* Added gradient header section */
+        /* Updated gradient header with holographic colors matching the reference image */
         .gradient-header {{
-            background: linear-gradient(135deg, #a8c8ec 0%, #b8d4f0 25%, #c9e0f4 50%, #d4e7f7 75%, #e0f0fa 100%);
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 15%, #d299c2 30%, #fef9d7 45%, #89f7fe 60%, #66a6ff 75%, #c2e9fb 90%, #a8edea 100%);
             padding: 48px 76px 32px;
             position: relative;
             border-top-left-radius: 33px;
@@ -127,6 +127,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #3A9EC7;
             font-weight: 600;
         }}
+        /* Updated heart badge to match holographic theme */
         .heart-badge {{
             position: absolute;
             right: 84px;
@@ -134,11 +135,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 96px;
             height: 96px;
             border-radius: 50%;
-            background: #D44A52;
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 50%, #a8edea 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
+            box-shadow: 0 20px 40px rgba(137, 247, 254, 0.3);
         }}
         .heart-badge svg {{
             width: 40px;
