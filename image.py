@@ -57,35 +57,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         /* Added gradient header section */
         .gradient-header {{
-            background: linear-gradient(135deg, 
-                #a8edea 0%, 
-                #fed6e3 25%, 
-                #d299c2 50%, 
-                #fef9d7 75%, 
-                #85d8ce 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
             padding: 48px 76px 32px;
             position: relative;
-        }}
-        .bot-name {{
-            font-size: 48px;
-            font-weight: 800;
-            color: #1F2933;
-            text-align: center;
-            letter-spacing: -0.02em;
-            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
-        }}
-        /* Updated card content area */
-        .card-content {{
-            padding: 48px 76px 96px;
-            background: #FFFFFF;
-            flex: 1;
         }}
         .profile {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 32px;
-            margin-bottom: 32px;
+            margin: 0;
         }}
         .profile-left {{
             display: flex;
@@ -97,18 +78,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             flex-direction: column;
             gap: 6px;
         }}
+        /* Updated sender name color for gradient background */
         .sender-name {{
-            font-size: 32px;
-            font-weight: 600;
-            color: #1F2933;
+            font-size: 44px;
+            font-weight: 700;
+            color: #FFFFFF;
             letter-spacing: -0.015em;
             text-wrap: balance;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }}
+        /* Updated sender handle color for gradient background */
         .sender-handle {{
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 500;
-            color: #3A9EC7;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }}
+        /* Updated menu dots color for gradient background */
         .menu-dots {{
             display: flex;
             flex-direction: row;
@@ -119,7 +105,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #D0D5DD;
+            background: rgba(255, 255, 255, 0.7);
+        }}
+        /* Added message container with separate styling */
+        .message-container {{
+            padding: 48px 76px 96px;
+            background: #FFFFFF;
         }}
         .message {{
             font-size: 42px;
@@ -127,6 +118,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #1F2933;
             font-weight: 500;
             word-break: break-word;
+            margin: 0;
         }}
         .message .hashtag {{
             color: #3A9EC7;
@@ -162,13 +154,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
     <div class="stage" role="presentation">
         <article class="card" aria-labelledby="sender-name">
-            <!-- Added gradient header with bot name -->
+            <!-- Moved profile section into gradient header -->
             <div class="gradient-header">
-                <div class="bot-name">MESSAGE</div>
-            </div>
-            
-            <!-- Moved content to separate section -->
-            <div class="card-content">
                 <header class="profile">
                     <div class="profile-left">
                         <div class="profile-meta">
@@ -182,9 +169,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <span></span>
                     </div>
                 </header>
+            </div>
+            <!-- Moved message into separate container -->
+            <div class="message-container">
                 <div class="message">{message}</div>
             </div>
-            
             <div class="heart-badge" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 21s-5.7-4.46-8.4-7.18C1.86 11.08 1 9.37 1 7.5 1 4.42 3.42 2 6.5 2 8.24 2 9.91 2.81 11 4.09 12.09 2.81 13.76 2 15.5 2 18.58 2 21 4.42 21 7.5c0 1.87-.86 3.58-2.6 6.32C17.7 16.54 12 21 12 21z"/>
