@@ -381,7 +381,6 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
     lang = await get_user_lang(message.from_user.id)
     data = await state.get_data()
     target_link_id = data.get("target_link_id")
-
     if target_link_id:
         user = await get_user_by_link_id(target_link_id)
         if not user:
@@ -390,31 +389,27 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
 
         sent_msg = None
 
-        # Store message in DB
         await store_anonymous_message(
             recipient_user_id=user["user_id"],
             message_text=message.text,
             sender_user_id=message.from_user.id
         )
 
-        # --- Image or text sending ---
         if GENERATE_IMAGE_ON_ANONYMOUS:
-            file_path = generate_message_image(message.text)  # should return string path
-            caption = LANGS[user.get("language", "en")]["anonymous_received"]
-
-            if file_path:
+            # FIX: generate_message_image is now a synchronous function (imgkit)!
+            image_path = generate_message_image(message.text)
+            caption = LANGS[user.get('language', 'en')]['anonymous_received']
+            if image_path:
                 try:
-                    # Upload as document so Telegram keeps transparency
-                    sent_msg = await bot.send_document(
+                    sent_msg = await bot.send_photo(
                         user["user_id"],
-                        document=FSInputFile(file_path),
+                        photo=FSInputFile(image_path),
                         caption=caption
                     )
                 finally:
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
+                    if os.path.exists(image_path):
+                        os.remove(image_path)
             else:
-                # Fallback if image generation fails
                 sent_msg = await bot.send_message(
                     user["user_id"],
                     caption
@@ -422,12 +417,9 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         else:
             sent_msg = await bot.send_message(
                 user["user_id"],
-                LANGS[user.get("language", "en")]["anonymous_received"].format(
-                    message=message.text
-                )
+                LANGS[user.get('language', 'en')]['anonymous_received'].format(message=message.text)
             )
 
-        # Save link for replies
         if sent_msg:
             await db.anonymous_links.insert_one({
                 "reply_message_id": sent_msg.message_id,
@@ -435,25 +427,17 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
                 "from_user_id": message.from_user.id
             })
 
-        # Update stats
         today = today_str()
         await db.users.update_one(
             {"user_id": user["user_id"]},
             {
                 "$inc": {"messages_received": 1},
-                "$set": {
-                    f"messages_received_daily.{today}": (
-                        user.get("messages_received_daily", {}).get(today, 0) + 1
-                    )
-                }
+                "$set": {f"messages_received_daily.{today}": (user.get("messages_received_daily", {}).get(today, 0) + 1)}
             }
         )
-
         await message.answer(LANGS[lang]["anonymous_sent"])
         await state.clear()
-
     else:
-        # If user has no target, show their own link
         user_short_username = await get_or_create_user(message.from_user.id)
         bot_username = (await bot.me()).username
         link = f"https://t.me/{bot_username}?start={user_short_username}"
@@ -461,7 +445,7 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
             LANGS[lang]["welcome"].format(link=link),
             reply_markup=get_share_keyboard(link, lang)
         )
-        
+
 async def set_bot_commands():
     # Owner/admin commands (YOUR user id)
     admin_commands = [
