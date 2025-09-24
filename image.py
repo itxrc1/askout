@@ -181,13 +181,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def generate_message_image(text: str, name: str = "Anonymous") -> str:
-    sender = name if (name and isinstance(name, str)) else "Anonymous"
+def generate_message_image(text: str, name: str = "Askout Bot") -> str:
+    sender = name if (name and isinstance(name, str)) else "Askout Bot"
     timestamp = "Just now"
     sender_clean = sender.strip()
     sender_initial = sender_clean[:1].upper() if sender_clean else "A"
-    slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "askoutuser"
-    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "askoutuser"
+    slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "Askoutbot"
+    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "Askoutbot"
     sender_handle = f"@{handle_slug}"
     hashtagged = re.sub(r"(?<!\w)#([A-Za-z0-9_]+)", r'<span class="hashtag">#\1</span>', text)
     formatted_message = hashtagged.replace("\n", "<br>")
