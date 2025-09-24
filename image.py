@@ -2,6 +2,7 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
+import re
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -14,7 +15,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: transparent;
         }}
         .container {{
@@ -72,6 +73,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 44px;
             word-break: break-word;
         }}
+        .emoji {{
+            height: 1em;
+            width: 1em;
+            vertical-align: -0.1em;
+        }}
     </style>
 </head>
 <body>
@@ -91,14 +97,37 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
+def replace_emojis_with_twemoji(text: str) -> str:
+    def emoji_to_img(match):
+        char = match.group(0)
+        codepoint = "-".join(f"{ord(c):x}" for c in char)
+        url = f"https://twemoji.maxcdn.com/v/latest/svg/{codepoint}.svg"
+        return f'<img src="{url}" alt="{char}" class="emoji">'
+    
+    # Match most emoji ranges
+    emoji_pattern = re.compile(
+        r"[\U0001F600-\U0001F64F"  # emoticons
+        r"\U0001F300-\U0001F5FF"   # symbols & pictographs
+        r"\U0001F680-\U0001F6FF"   # transport & map
+        r"\U0001F1E0-\U0001F1FF"   # flags
+        r"\U00002700-\U000027BF"   # dingbats
+        r"\U0001F900-\U0001F9FF"   # supplemental symbols
+        r"\U00002600-\U000026FF"   # misc symbols
+        r"]+", flags=re.UNICODE
+    )
+    return emoji_pattern.sub(emoji_to_img, text)
+
 def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
 
+    # Replace emojis with Twemoji <img>
+    message_with_emojis = replace_emojis_with_twemoji(text.replace("\n", "<br>"))
+
     html_content = HTML_TEMPLATE.format(
         sender=sender,
         timestamp=timestamp,
-        message=text.replace("\n", "<br>")
+        message=message_with_emojis
     )
 
     temp_dir = tempfile.gettempdir()
@@ -130,5 +159,5 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             pass
 
 # Example usage:
-# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
+# img = generate_message_image("Hello 😃👍🏼🚀", "Copilot")
 # print(img)
