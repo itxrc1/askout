@@ -12,7 +12,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            color-scheme: light;
         }
         * {
             box-sizing: border-box;
@@ -105,6 +104,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #1F2933;
             font-weight: 500;
             word-break: break-word;
+            margin-top: 20px;
         }
         .profile + .message {
             margin-top: 20px;
@@ -166,7 +166,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
-          twemoji.parse(document.body, {folder: "svg", ext: ".svg"}});
+          twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
       });
     </script>
 </body>
