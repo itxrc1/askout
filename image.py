@@ -56,9 +56,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         /* Added gradient header section */
         .gradient-header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background: linear-gradient(135deg, #a8c8ec 0%, #b8d4f0 25%, #c9e0f4 50%, #d4e7f7 75%, #e0f0fa 100%);
             padding: 48px 76px 32px;
             position: relative;
+            border-top-left-radius: 33px;
+            border-top-right-radius: 33px;
         }}
         .profile {{
             display: flex;
