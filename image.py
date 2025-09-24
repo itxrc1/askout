@@ -50,7 +50,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: #FFFFFF;
             border: 3px solid #D44A52;
             border-radius: 36px;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
@@ -111,6 +110,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .message-container {{
             padding: 48px 76px 96px;
             background: #FFFFFF;
+            border-bottom-left-radius: 33px;
+            border-bottom-right-radius: 33px;
         }}
         .message {{
             font-size: 42px;
