@@ -395,15 +395,23 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
             sender_user_id=message.from_user.id
         )
         if GENERATE_IMAGE_ON_ANONYMOUS:
-            image_path = generate_message_image(message.text)
-            caption = LANGS[user.get('language', 'en')]['anonymous_received']
-            if image_path:
-                try:
-                    sent_msg = await bot.send_document(
-                        user["user_id"],
-                        document=FSInputFile(image_path),
-                        caption=caption
-                    )
+    image_path = generate_message_image(message.text)
+    caption = LANGS[user.get('language', 'en')]['anonymous_received']
+    if image_path:
+        try:
+            sent_msg = await bot.send_document(
+                user["user_id"],
+                document=FSInputFile(image_path),
+                caption=caption
+            )
+        finally:
+            if os.path.exists(image_path):
+                os.remove(image_path)
+    else:
+        sent_msg = await bot.send_message(
+            user["user_id"],
+            caption
+        )
                 finally:
                     if os.path.exists(image_path):
                         os.remove(image_path)
