@@ -8,48 +8,49 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', sans-serif;
+            font-family: 'Segoe UI', 'Arial', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             background: transparent;
         }}
         .container {{
-            width: 1200px;
-            margin: 0 auto;
-            padding: 72px;
+            width: 400px;
+            padding: 24px;
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 40px;
-            padding: 72px;
-            box-shadow: 0 40px 50px -10px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
         }}
         .header {{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 48px;
+            margin-bottom: 16px;
         }}
         .sender {{
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            padding: 20px 40px;
-            border-radius: 28px;
-            font-size: 32px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
         }}
         .timestamp {{
             background: #f1f5f9;
             color: #64748b;
-            padding: 12px 28px;
-            border-radius: 28px;
-            font-size: 26px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
         }}
         .message-content-wrapper {{
@@ -59,18 +60,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: absolute;
             left: 0;
             top: 0;
-            width: 10px;
+            width: 4px;
             height: 100%;
             background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 5px;
+            border-radius: 2px;
         }}
         .message-content {{
-            padding-left: 56px;
+            padding-left: 24px;
             color: #334155;
-            line-height: 2.1;
+            line-height: 1.6;
             font-weight: 500;
-            font-size: 44px;
-            word-break: break-word;
+            font-size: 16px;
         }}
     </style>
 </head>
@@ -109,7 +109,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1200",   # matches the HTML container width
+        "width": "500",
         "encoding": "UTF-8",
         "quiet": "",
     }
@@ -130,5 +130,5 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             pass
 
 # Example usage:
-# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
+# img = generate_message_image("Test 😃", "Copilot")
 # print(img)
