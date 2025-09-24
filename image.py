@@ -2,6 +2,7 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
+import re
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -13,54 +14,73 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         :root {{
             color-scheme: light;
         }}
+        * {{
+            box-sizing: border-box;
+        }}
         body {{
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: transparent;
+            background: #FFF5EF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }}
-        .canvas {{
+        .stage {{
+            position: relative;
             width: 1200px;
-            margin: 0 auto;
-            padding: 80px 88px;
-            background: #F8FAFC;
-            box-sizing: border-box;
+            padding: 96px 88px 120px;
+            background: #FFF5EF;
+            border-radius: 56px;
         }}
-        .message-card {{
+        .stage::before {{
+            content: "";
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 20px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.08);
+        }}
+        .card {{
+            position: relative;
             background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 40px;
-            box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
-            padding: 64px 72px;
+            border: 3px solid #D44A52;
+            border-radius: 36px;
+            padding: 72px 76px 96px;
             display: flex;
             flex-direction: column;
             gap: 48px;
+            box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
         }}
-        .card-header {{
+        .profile {{
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 32px;
         }}
-        .sender {{
+        .profile-left {{
             display: flex;
             align-items: center;
             gap: 28px;
         }}
-        .sender-avatar {{
-            flex-shrink: 0;
-            width: 88px;
-            height: 88px;
+        .profile-photo {{
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
-            background: #2563EB;
-            color: #FFFFFF;
+            overflow: hidden;
+            background: #F3D9D7;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 44px;
+            font-size: 46px;
             font-weight: 700;
+            color: #D44A52;
         }}
-        .sender-details {{
+        .profile-meta {{
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -68,70 +88,55 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .sender-name {{
             font-size: 44px;
             font-weight: 700;
-            color: #0F172A;
-            letter-spacing: -0.02em;
+            color: #1F2933;
+            letter-spacing: -0.015em;
+            text-wrap: balance;
         }}
-        .timestamp {{
-            padding: 14px 32px;
-            border-radius: 999px;
-            border: 1px solid #E2E8F0;
-            font-size: 24px;
+        .sender-handle {{
+            font-size: 26px;
             font-weight: 500;
-            color: rgba(15, 23, 42, 0.7);
-            background: rgba(37, 99, 235, 0.08);
+            color: #3A9EC7;
         }}
-        .message-body {{
-            position: relative;
-            padding-left: 40px;
-            border-left: 6px solid #2563EB;
+        .menu-dots {{
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            margin-top: 16px;
         }}
-        .message-body::before {{
-            content: "“";
-            position: absolute;
-            top: -32px;
-            left: -24px;
-            font-size: 110px;
-            font-weight: 600;
-            color: rgba(37, 99, 235, 0.18);
+        .menu-dots span {{
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #D0D5DD;
         }}
-        .message-text {{
-            font-size: 46px;
-            line-height: 1.7;
+        .message {{
+            font-size: 42px;
+            line-height: 1.65;
+            color: #1F2933;
             font-weight: 500;
-            color: #0F172A;
             word-break: break-word;
         }}
-        .footer {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid #E2E8F0;
-            padding-top: 32px;
-        }}
-        .footer-brand {{
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 24px;
+        .message .hashtag {{
+            color: #3A9EC7;
             font-weight: 600;
-            color: #0F172A;
         }}
-        .footer-brand span {{
-            display: inline-flex;
+        .heart-badge {{
+            position: absolute;
+            right: 84px;
+            bottom: -38px;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: #D44A52;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: #2563EB;
-            color: #FFFFFF;
-            font-size: 24px;
-            font-weight: 700;
+            box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
         }}
-        .footer-tagline {{
-            font-size: 24px;
-            font-weight: 500;
-            color: rgba(15, 23, 42, 0.6);
+        .heart-badge svg {{
+            width: 40px;
+            height: 40px;
+            fill: #FFFFFF;
         }}
         img.emoji {{
             height: 1.1em;
@@ -143,28 +148,28 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="canvas">
-        <article class="message-card" aria-labelledby="sender-name">
-            <header class="card-header">
-                <div class="sender">
-                    <div class="sender-avatar" aria-hidden="true">{sender_initial}</div>
-                    <div class="sender-details">
+    <div class="stage" role="presentation">
+        <article class="card" aria-labelledby="sender-name">
+            <header class="profile">
+                <div class="profile-left">
+                    <div class="profile-photo" aria-hidden="true">{sender_initial}</div>
+                    <div class="profile-meta">
                         <div class="sender-name" id="sender-name">{sender}</div>
-                        <div class="footer-tagline">Anonymous message delivered</div>
+                        <div class="sender-handle">{sender_handle}</div>
                     </div>
                 </div>
-                <div class="timestamp">{timestamp}</div>
-            </header>
-            <div class="message-body">
-                <div class="message-text">{message}</div>
-            </div>
-            <footer class="footer">
-                <div class="footer-brand">
-                    <span>A</span>
-                    Askout Bot
+                <div class="menu-dots" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div class="footer-tagline">Say it freely. We'll keep it anonymous.</div>
-            </footer>
+            </header>
+            <div class="message">{message}</div>
+            <div class="heart-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 21s-5.7-4.46-8.4-7.18C1.86 11.08 1 9.37 1 7.5 1 4.42 3.42 2 6.5 2 8.24 2 9.91 2.81 11 4.09 12.09 2.81 13.76 2 15.5 2 18.58 2 21 4.42 21 7.5c0 1.87-.86 3.58-2.6 6.32C17.7 16.54 12 21 12 21z"/>
+                </svg>
+            </div>
         </article>
     </div>
     <script>
@@ -181,12 +186,18 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
     timestamp = "Just now"
     sender_clean = sender.strip()
     sender_initial = sender_clean[:1].upper() if sender_clean else "A"
+    slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "askoutuser"
+    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "askoutuser"
+    sender_handle = f"@{handle_slug}"
+    hashtagged = re.sub(r"(?<!\\w)#([A-Za-z0-9_]+)", r"<span class=\\"hashtag\\">#\\1</span>", text)
+    formatted_message = hashtagged.replace("\\n", "<br>")
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
         sender_initial=sender_initial,
+        sender_handle=sender_handle,
         timestamp=timestamp,
-        message=text.replace("\n", "<br>")
+        message=formatted_message
     )
 
     temp_dir = tempfile.gettempdir()
