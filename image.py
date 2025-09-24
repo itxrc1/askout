@@ -67,19 +67,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             gap: 28px;
         }}
-        .profile-photo {{
-            width: 96px;
-            height: 96px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: #F3D9D7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 46px;
-            font-weight: 700;
-            color: #D44A52;
-        }}
         .profile-meta {{
             display: flex;
             flex-direction: column;
@@ -99,13 +86,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         .menu-dots {{
             display: flex;
-            flex-direction: row;
-            gap: 8px;
+            flex-direction: column;
+            gap: 6px;
             margin-top: 16px;
         }}
         .menu-dots span {{
-            width: 12px;
-            height: 12px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #D0D5DD;
         }}
@@ -152,7 +139,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <article class="card" aria-labelledby="sender-name">
             <header class="profile">
                 <div class="profile-left">
-                    <div class="profile-photo" aria-hidden="true">{sender_initial}</div>
                     <div class="profile-meta">
                         <div class="sender-name" id="sender-name">{sender}</div>
                         <div class="sender-handle">{sender_handle}</div>
@@ -187,7 +173,7 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     sender_clean = sender.strip()
     sender_initial = sender_clean[:1].upper() if sender_clean else "A"
     slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "askoutbot"
-    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "askoutbot"
+    handle_slug = re.sub(r"[^a-z0-9]+", "", slug_source.lower().replace(" ", "")) or "askoutbot"
     sender_handle = f"@{handle_slug}"
     hashtagged = re.sub(r"(?<!\w)#([A-Za-z0-9_]+)", r'<span class="hashtag">#\1</span>', text)
     formatted_message = hashtagged.replace("\n", "<br>")
