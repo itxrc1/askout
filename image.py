@@ -7,79 +7,76 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Generate PNG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Message Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {{
+        body {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: transparent;
-        }}
-        .container {{
+        }
+        .container {
             width: 1200px;
             margin: 0 auto;
-            padding: 72px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
-        }}
-        .message-card {{
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 40px;
-            padding: 72px;
-            box-shadow: 0 40px 50px -10px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(10px);
-        }}
-        .header {{
+            padding: 64px;
+            background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
+        }
+        .message-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 36px;
+            padding: 64px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(16px);
+        }
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 48px;
-        }}
-        .sender {{
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            margin-bottom: 40px;
+        }
+        .sender {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
             color: white;
-            padding: 20px 40px;
-            border-radius: 28px;
-            font-size: 32px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-        }}
-        .timestamp {{
+            padding: 18px 36px;
+            border-radius: 24px;
+            font-size: 40px;
+            font-weight: 700;
+        }
+        .timestamp {
             background: #f1f5f9;
-            color: #64748b;
+            color: #475569;
             padding: 12px 28px;
-            border-radius: 28px;
-            font-size: 26px;
+            border-radius: 20px;
+            font-size: 22px;
             font-weight: 500;
-            font-family: 'Poppins', sans-serif;
-        }}
-        .message-content-wrapper {{
+        }
+        .message-content-wrapper {
             position: relative;
-        }}
-        .message-gradient {{
+        }
+        .message-gradient {
             position: absolute;
             left: 0;
             top: 0;
-            width: 10px;
+            width: 8px;
             height: 100%;
-            background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 5px;
-        }}
-        .message-content {{
-            padding-left: 56px;
-            color: #334155;
-            line-height: 2.1;
+            background: linear-gradient(to bottom, #2563eb, #7c3aed);
+            border-radius: 4px;
+        }
+        .message-content {
+            padding-left: 48px;
+            color: #1e293b;
+            line-height: 1.9;
             font-weight: 500;
-            font-size: 44px;
+            font-size: 46px;
             word-break: break-word;
-            font-family: 'Poppins', sans-serif;
-        }}
-        img.emoji {{
-            height: 1em;
-            width: 1em;
-            margin: 0 .05em 0 .1em;
-            vertical-align: -0.1em;
-        }}
+        }
+        img.emoji {
+            height: 1.1em;
+            width: 1.1em;
+            margin: 0 .05em;
+            vertical-align: -0.15em;
+        }
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
@@ -97,15 +94,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {{
-          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
-      }});
+      document.addEventListener("DOMContentLoaded", function() {
+          twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
+      });
     </script>
 </body>
 </html>
 """
 
-def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
+def generate_message_image(text: str, name: str = "Anonymous") -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
 
@@ -123,10 +120,9 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1200",
+        "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
-        "enable-local-file-access": "",
     }
 
     try:
@@ -143,3 +139,9 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+
+# Example usage:
+if __name__ == "__main__":
+    img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
+    print("Generated image path:", img)
