@@ -7,69 +7,131 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Message Card</title>
+    <title>Askout Message Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {{
+            color-scheme: light;
+        }}
         body {{
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
             background: transparent;
         }}
-        .container {{
+        .canvas {{
             width: 1200px;
             margin: 0 auto;
-            padding: 64px;
-            background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
+            padding: 80px 88px;
+            background: #F8FAFC;
+            box-sizing: border-box;
         }}
         .message-card {{
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 36px;
-            padding: 64px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(16px);
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 40px;
+            box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+            padding: 64px 72px;
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
         }}
-        .header {{
+        .card-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 32px;
+        }}
+        .sender {{
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }}
+        .sender-avatar {{
+            flex-shrink: 0;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            font-weight: 700;
+        }}
+        .sender-details {{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }}
+        .sender-name {{
+            font-size: 44px;
+            font-weight: 700;
+            color: #0F172A;
+            letter-spacing: -0.02em;
+        }}
+        .timestamp {{
+            padding: 14px 32px;
+            border-radius: 999px;
+            border: 1px solid #E2E8F0;
+            font-size: 24px;
+            font-weight: 500;
+            color: rgba(15, 23, 42, 0.7);
+            background: rgba(37, 99, 235, 0.08);
+        }}
+        .message-body {{
+            position: relative;
+            padding-left: 40px;
+            border-left: 6px solid #2563EB;
+        }}
+        .message-body::before {{
+            content: "“";
+            position: absolute;
+            top: -32px;
+            left: -24px;
+            font-size: 110px;
+            font-weight: 600;
+            color: rgba(37, 99, 235, 0.18);
+        }}
+        .message-text {{
+            font-size: 46px;
+            line-height: 1.7;
+            font-weight: 500;
+            color: #0F172A;
+            word-break: break-word;
+        }}
+        .footer {{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 40px;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 32px;
         }}
-        .sender {{
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            color: white;
-            padding: 18px 36px;
-            border-radius: 24px;
-            font-size: 40px;
+        .footer-brand {{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #0F172A;
+        }}
+        .footer-brand span {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #2563EB;
+            color: #FFFFFF;
+            font-size: 24px;
             font-weight: 700;
         }}
-        .timestamp {{
-            background: #f1f5f9;
-            color: #475569;
-            padding: 12px 28px;
-            border-radius: 20px;
-            font-size: 22px;
+        .footer-tagline {{
+            font-size: 24px;
             font-weight: 500;
-        }}
-        .message-content-wrapper {{
-            position: relative;
-        }}
-        .message-gradient {{
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 8px;
-            height: 100%;
-            background: linear-gradient(to bottom, #2563eb, #7c3aed);
-            border-radius: 4px;
-        }}
-        .message-content {{
-            padding-left: 48px;
-            color: #1e293b;
-            line-height: 1.9;
-            font-weight: 500;
-            font-size: 46px;
-            word-break: break-word;
+            color: rgba(15, 23, 42, 0.6);
         }}
         img.emoji {{
             height: 1.1em;
@@ -81,17 +143,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container" id="message-card">
-        <div class="message-card">
-            <div class="header">
-                <div class="sender">{sender}</div>
+    <div class="canvas">
+        <article class="message-card" aria-labelledby="sender-name">
+            <header class="card-header">
+                <div class="sender">
+                    <div class="sender-avatar" aria-hidden="true">{sender_initial}</div>
+                    <div class="sender-details">
+                        <div class="sender-name" id="sender-name">{sender}</div>
+                        <div class="footer-tagline">Anonymous message delivered</div>
+                    </div>
+                </div>
                 <div class="timestamp">{timestamp}</div>
+            </header>
+            <div class="message-body">
+                <div class="message-text">{message}</div>
             </div>
-            <div class="message-content-wrapper">
-                <div class="message-gradient"></div>
-                <div class="message-content">{message}</div>
-            </div>
-        </div>
+            <footer class="footer">
+                <div class="footer-brand">
+                    <span>A</span>
+                    Askout Bot
+                </div>
+                <div class="footer-tagline">Say it freely. We'll keep it anonymous.</div>
+            </footer>
+        </article>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function() {{
@@ -105,9 +179,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 def generate_message_image(text: str, name: str = "Anonymous") -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
+    sender_clean = sender.strip()
+    sender_initial = sender_clean[:1].upper() if sender_clean else "A"
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
+        sender_initial=sender_initial,
         timestamp=timestamp,
         message=text.replace("\n", "<br>")
     )
