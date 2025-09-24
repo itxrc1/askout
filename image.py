@@ -2,6 +2,7 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
+from aiogram.types import FSInputFile
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -14,13 +15,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: transparent !important;  /* transparent page background */
+            background: transparent;
         }}
         .container {{
             width: 1200px;
             margin: 0 auto;
             padding: 64px;
-            background: transparent !important;  /* remove gradient, make transparent */
+            background: transparent;
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.95);
@@ -102,7 +103,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def generate_message_image(text: str, name: str = "Anonymous") -> str:
+def generate_message_image(text: str, name: str = "Anonymous"):
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
 
@@ -123,7 +124,7 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
         "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
-        "transparent": ""  # <<< important for transparent PNG
+        "transparent": ""  # enable transparent background
     }
 
     try:
@@ -131,7 +132,7 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
         if not png_path.exists() or png_path.stat().st_size == 0:
             print("❌ Image generation failed: Output PNG not created.")
             return None
-        return str(png_path)
+        return FSInputFile(str(png_path))  # ready for Telegram send_document
     except Exception as ex:
         print(f"❌ Image generation failed: {ex}")
         return None
@@ -140,8 +141,3 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
-
-
-if __name__ == "__main__":
-    img = generate_message_image("Hello 😃🔥✨🚀 Transparent background now!", "Copilot")
-    print("Generated image path:", img)
