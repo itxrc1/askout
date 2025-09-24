@@ -14,102 +14,94 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            background: linear-gradient(160deg, #0ea5e9 0%, #0369a1 100%);
         }}
-        .container {{
+        .canvas {{
             width: 1200px;
             margin: 0 auto;
-            padding: 48px;
-            background: #0a0a0a;
+            padding: 80px 0;
         }}
         .message-card {{
-            background: #111111;
-            border: 1px solid #1e1e1e;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }}
-        .header {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #1e1e1e;
-        }}
-        .sender {{
-            background: #ffffff;
-            color: #000000;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }}
-        .timestamp {{
-            background: #1e1e1e;
-            color: #888888;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-        }}
-        .message-content-wrapper {{
             position: relative;
-        }}
-        .message-indicator {{
-            position: absolute;
-            left: 0;
-            top: 4px;
-            width: 3px;
-            height: 20px;
+            max-width: 860px;
+            margin: 0 auto;
             background: #ffffff;
-            border-radius: 2px;
+            border-radius: 24px;
+            padding: 60px 72px 76px;
+            box-shadow: 0 35px 70px rgba(3, 54, 94, 0.28);
         }}
-        .message-content {{
-            padding-left: 20px;
-            color: #ffffff;
-            line-height: 1.6;
-            font-weight: 400;
-            font-size: 18px;
-            word-break: break-word;
+        .message-card::after {{
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -28px;
+            transform: translateX(-50%) rotate(45deg);
+            width: 56px;
+            height: 56px;
+            background: #ffffff;
+            box-shadow: 12px 12px 30px rgba(3, 54, 94, 0.18);
         }}
-        .bot-branding {{
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #1e1e1e;
+        .message-title {{
+            margin: 0;
+            font-size: 54px;
+            font-weight: 700;
+            color: #0f172a;
             text-align: center;
         }}
-        .bot-name {{
-            color: #666666;
-            font-size: 11px;
+        .message-divider {{
+            width: 100%;
+            height: 1px;
+            background: #e2e8f0;
+            margin: 34px 0;
+        }}
+        .message-body {{
+            margin: 0;
+            font-size: 34px;
+            line-height: 1.6;
+            color: #334155;
+            text-align: center;
+            word-break: break-word;
+        }}
+        .message-meta {{
+            margin-top: 26px;
+            font-size: 24px;
+            color: #94a3b8;
+            text-align: center;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        }}
+        .message-stars {{
+            margin-top: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }}
+        .message-stars span {{
+            font-size: 42px;
+            color: #f59e0b;
         }}
         img.emoji {{
-            height: 1.2em;
-            width: 1.2em;
+            height: 1.15em;
+            width: 1.15em;
             margin: 0 .05em;
-            vertical-align: -0.2em;
+            vertical-align: -0.18em;
         }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container" id="message-card">
+    <div class="canvas" id="message-card">
         <div class="message-card">
-            <div class="header">
-                <div class="sender">{sender}</div>
-                <div class="timestamp">{timestamp}</div>
-            </div>
-            <div class="message-content-wrapper">
-                <div class="message-indicator"></div>
-                <div class="message-content">{message}</div>
-            </div>
-            <div class="bot-branding">
-                <div class="bot-name">Askout Bot</div>
+            <h1 class="message-title">{sender}</h1>
+            <div class="message-divider"></div>
+            <p class="message-body">{message}</p>
+            <div class="message-meta">{timestamp}</div>
+            <div class="message-stars">
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
+                <span>★</span>
             </div>
         </div>
     </div>
