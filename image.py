@@ -1,7 +1,7 @@
-import pathlib
-import tempfile
-import uuid
 import imgkit
+from PIL import Image
+import tempfile
+import os
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -14,13 +14,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: transparent;
+            background: transparent !important;
         }}
         .container {{
             width: 1200px;
             margin: 0 auto;
             padding: 64px;
-            background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
+            background: transparent !important;
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.95);
@@ -102,45 +102,47 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def generate_message_image(text: str, name: str = "Anonymous") -> str:
-    sender = name if (name and isinstance(name, str)) else "Anonymous"
-    timestamp = "Just now"
+def generate_message_card(sender, timestamp, message, output_path="message.png"):
+    # Fill template
+    html_content = HTML_TEMPLATE.format(sender=sender, timestamp=timestamp, message=message)
 
-    html_content = HTML_TEMPLATE.format(
-        sender=sender,
-        timestamp=timestamp,
-        message=text.replace("\n", "<br>")
-    )
+    # Save HTML to temp file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as f:
+        f.write(html_content.encode("utf-8"))
+        temp_html = f.name
 
-    temp_dir = tempfile.gettempdir()
-    file_id = uuid.uuid4().hex
-    html_path = pathlib.Path(temp_dir) / f"msg_{file_id}.html"
-    png_path = pathlib.Path(temp_dir) / f"msg_{file_id}.png"
-    html_path.write_text(html_content, encoding="utf-8")
-
+    # imgkit options (transparent background)
     options = {
         "format": "png",
         "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
+        "transparent": ""
     }
 
-    try:
-        imgkit.from_file(str(html_path), str(png_path), options=options)
-        if not png_path.exists() or png_path.stat().st_size == 0:
-            print("❌ Image generation failed: Output PNG not created.")
-            return None
-        return str(png_path)
-    except Exception as ex:
-        print(f"❌ Image generation failed: {ex}")
-        return None
-    finally:
-        try:
-            html_path.unlink(missing_ok=True)
-        except Exception:
-            pass
+    temp_png = tempfile.NamedTemporaryFile(delete=False, suffix=".png").name
 
+    # Render HTML to PNG
+    imgkit.from_file(temp_html, temp_png, options=options)
 
+    # Open PNG and auto-trim transparent edges
+    img = Image.open(temp_png).convert("RGBA")
+    bbox = img.getbbox()
+    if bbox:
+        img = img.crop(bbox)
+    img.save(output_path)
+
+    # Cleanup
+    os.remove(temp_html)
+    os.remove(temp_png)
+
+    print(f"✅ Card saved at {output_path}")
+
+# Example usage
 if __name__ == "__main__":
-    img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
-    print("Generated image path:", img)
+    generate_message_card(
+        sender="Syed Tahseen",
+        timestamp="2025-09-24 12:45",
+        message="Hello 👋 This is a test message with emojis 😊🔥🚀",
+        output_path="final_card.png"
+    )
