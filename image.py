@@ -1,8 +1,8 @@
+ 
 import pathlib
 import tempfile
 import uuid
 import imgkit
-from aiogram.types import FSInputFile
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -21,7 +21,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 1200px;
             margin: 0 auto;
             padding: 64px;
-            background: transparent;
+            background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.95);
@@ -103,7 +103,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def generate_message_image(text: str, name: str = "Anonymous"):
+def generate_message_image(text: str, name: str = "Anonymous") -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
 
@@ -124,7 +124,6 @@ def generate_message_image(text: str, name: str = "Anonymous"):
         "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
-        "transparent": ""  # Transparent background
     }
 
     try:
@@ -132,7 +131,7 @@ def generate_message_image(text: str, name: str = "Anonymous"):
         if not png_path.exists() or png_path.stat().st_size == 0:
             print("❌ Image generation failed: Output PNG not created.")
             return None
-        return FSInputFile(str(png_path))  # ready for Telegram send_document
+        return str(png_path)
     except Exception as ex:
         print(f"❌ Image generation failed: {ex}")
         return None
@@ -141,3 +140,8 @@ def generate_message_image(text: str, name: str = "Anonymous"):
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+
+if __name__ == "__main__":
+    img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
+    print("Generated image path:", img)
