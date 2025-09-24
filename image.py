@@ -24,11 +24,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: transparent;
         }}
         .message-card {{
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 1); /* Solid white card */
             border-radius: 36px;
             padding: 64px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(16px);
         }}
         .header {{
             display: flex;
@@ -124,7 +123,7 @@ def generate_message_image(text: str, name: str = "Anonymous"):
         "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
-        "transparent": ""  # enable transparent background
+        "--transparent": ""  # ✅ correct flag
     }
 
     try:
@@ -132,7 +131,7 @@ def generate_message_image(text: str, name: str = "Anonymous"):
         if not png_path.exists() or png_path.stat().st_size == 0:
             print("❌ Image generation failed: Output PNG not created.")
             return None
-        return FSInputFile(str(png_path))  # ready for Telegram send_document
+        return FSInputFile(str(png_path))  # send as document
     except Exception as ex:
         print(f"❌ Image generation failed: {ex}")
         return None
