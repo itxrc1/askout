@@ -189,8 +189,8 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
     slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "askoutuser"
     handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "askoutuser"
     sender_handle = f"@{handle_slug}"
-    hashtagged = re.sub(r"(?<!\\w)#([A-Za-z0-9_]+)", r"<span class=\\"hashtag\\">#\\1</span>", text)
-    formatted_message = hashtagged.replace("\\n", "<br>")
+    hashtagged = re.sub(r"(?<!\w)#([A-Za-z0-9_]+)", r'<span class="hashtag">#\1</span>', text)
+    formatted_message = hashtagged.replace("\n", "<br>")
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
