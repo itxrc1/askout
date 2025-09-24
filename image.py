@@ -14,8 +14,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            /* Emoji-friendly font stack first, then Poppins */
-            font-family: 'Segoe UI', 'Arial', 'Noto Color Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', 'Poppins', sans-serif;
+            font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', sans-serif;
             background: transparent;
         }}
         .container {{
@@ -110,7 +109,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1200",   # adjust this to your desired width
+        "width": "1200",   # matches the HTML container width
         "encoding": "UTF-8",
         "quiet": "",
     }
@@ -129,3 +128,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
+# Example usage:
+# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
+# print(img)
