@@ -8,49 +8,49 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', 'Arial', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            /* Emoji-friendly font stack first, then Poppins */
+            font-family: 'Segoe UI', 'Arial', 'Noto Color Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', 'Poppins', sans-serif;
             background: transparent;
         }}
         .container {{
-            width: 400px;
-            padding: 24px;
+            width: 1200px;
+            margin: 0 auto;
+            padding: 72px;
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e0e7ff 100%);
         }}
         .message-card {{
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 40px;
+            padding: 72px;
+            box-shadow: 0 40px 50px -10px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
         }}
         .header {{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 48px;
         }}
         .sender {{
             background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 20px 40px;
+            border-radius: 28px;
+            font-size: 32px;
             font-weight: 600;
         }}
         .timestamp {{
             background: #f1f5f9;
             color: #64748b;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 12px 28px;
+            border-radius: 28px;
+            font-size: 26px;
             font-weight: 500;
         }}
         .message-content-wrapper {{
@@ -60,17 +60,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: absolute;
             left: 0;
             top: 0;
-            width: 4px;
+            width: 10px;
             height: 100%;
             background: linear-gradient(to bottom, #3b82f6, #6366f1);
-            border-radius: 2px;
+            border-radius: 5px;
         }}
         .message-content {{
-            padding-left: 24px;
+            padding-left: 56px;
             color: #334155;
-            line-height: 1.6;
+            line-height: 2.1;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 44px;
+            word-break: break-word;
         }}
     </style>
 </head>
@@ -109,7 +110,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "500",
+        "width": "1200",   # adjust this to your desired width
         "encoding": "UTF-8",
         "quiet": "",
     }
@@ -128,7 +129,3 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
-
-# Example usage:
-# img = generate_message_image("Test 😃", "Copilot")
-# print(img)
