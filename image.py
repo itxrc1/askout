@@ -8,178 +8,210 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Message Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {{
+        * {
             box-sizing: border-box;
-        }}
+        }
         
-        body {{
+        body {
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             background: transparent;
             -webkit-font-smoothing: antialiased;
-        }}
+        }
         
-        .container {{
+        .container {
             width: 1200px;
             margin: 0 auto;
-            padding: 80px;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 60px;
+            background: #0a0a0a;
             min-height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }}
-        
-        .message-card {{
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 0;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 700px;
-            width: 100%;
             position: relative;
-            overflow: hidden;
-        }}
+        }
         
-        .message-card::before {{
+        .container::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-        }}
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+        }
         
-        .card-header {{
-            padding: 40px 40px 0 40px;
-        }}
+        .message-card {
+            background: #ffffff;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: 
+                0 0 0 3px #000000,
+                12px 12px 0 0 #000000;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #000000;
+        }
         
-        .header-content {{
+        .accent-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            width: 100%;
+        }
+        
+        .card-content {
+            padding: 48px;
+        }
+        
+        .header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
-            margin-bottom: 32px;
-        }}
+            margin-bottom: 40px;
+            gap: 24px;
+        }
         
-        .sender-info {{
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }}
+        .sender-section {
+            flex: 1;
+        }
         
-        .avatar {{
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }}
-        
-        .sender-details {{
-            display: flex;
-            flex-direction: column;
-        }}
-        
-        .sender-name {{
-            font-size: 20px;
-            font-weight: 600;
-            color: #0f172a;
-            margin: 0;
-            line-height: 1.2;
-        }}
-        
-        .sender-label {{
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 500;
+        .anonymous-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #666666;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }}
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: #f5f5f5;
+            padding: 6px 12px;
+            display: inline-block;
+            border: 2px solid #000000;
+        }
         
-        .timestamp {{
-            color: #64748b;
-            font-size: 14px;
+        .sender-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        
+        .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            color: #000000;
+            font-size: 12px;
             font-weight: 500;
-            background: #f8fafc;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-        }}
+            background: #ffff00;
+            padding: 12px 16px;
+            border: 2px solid #000000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
         
-        .message-body {{
-            padding: 0 40px 40px 40px;
-        }}
+        .message-wrapper {
+            position: relative;
+        }
         
-        .message-content {{
-            color: #1e293b;
-            line-height: 1.6;
-            font-weight: 400;
-            font-size: 28px;
+        .message-content {
+            color: #000000;
+            line-height: 1.4;
+            font-weight: 500;
+            font-size: 24px;
             word-break: break-word;
             margin: 0;
             padding: 32px;
-            background: #f8fafc;
-            border-radius: 16px;
-            border-left: 4px solid #3b82f6;
+            background: #f8f8f8;
+            border: 3px solid #000000;
             position: relative;
-        }}
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+        }
         
-        .message-content::before {{
-            content: '"';
+        .quote-mark {
             position: absolute;
-            top: 8px;
-            left: 16px;
+            top: -8px;
+            left: 24px;
+            background: #ffffff;
+            padding: 0 8px;
             font-size: 48px;
-            color: #cbd5e1;
-            font-family: Georgia, serif;
+            font-weight: 700;
+            color: #000000;
             line-height: 1;
-        }}
+        }
         
-        img.emoji {{
+        .message-footer {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .anonymous-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #000000;
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        img.emoji {
             height: 1.1em;
             width: 1.1em;
             margin: 0 .05em;
             vertical-align: -0.15em;
-        }}
+        }
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
         <div class="message-card">
-            <div class="card-header">
-                <div class="header-content">
-                    <div class="sender-info">
-                        <div class="avatar">🎭</div>
-                        <div class="sender-details">
-                            <h1 class="sender-name">{sender}</h1>
-                            <div class="sender-label">Anonymous Message</div>
-                        </div>
+            <div class="accent-bar"></div>
+            
+            <div class="card-content">
+                <div class="header">
+                    <div class="sender-section">
+                        <div class="anonymous-label">Anonymous</div>
+                        <h1 class="sender-name">{sender}</h1>
                     </div>
                     <div class="timestamp">{timestamp}</div>
                 </div>
-            </div>
-            
-            <div class="message-body">
-                <div class="message-content">{message}</div>
+                
+                <div class="message-wrapper">
+                    <div class="quote-mark">"</div>
+                    <div class="message-content">{message}</div>
+                </div>
+                
+                <div class="message-footer">
+                    <div class="anonymous-badge">
+                        🎭 ANONYMOUS MESSAGE
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
     <script>
-        document.addEventListener("DOMContentLoaded", function() {{
-            twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
-        }});
+        document.addEventListener("DOMContentLoaded", function() {
+            twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
+        });
     </script>
 </body>
 </html>
