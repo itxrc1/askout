@@ -14,7 +14,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #f5f5f5;
+            background: #f0f0f0;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,59 +23,71 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .container {{
             width: 600px;
             padding: 40px;
-            background: #f5f5f5;
+            background: #f0f0f0;
         }}
         .message-card {{
             background: white;
-            border: 2px solid #ff6b6b;
-            border-radius: 16px;
+            border: 1.5px solid #ff9999;
+            border-radius: 20px;
             padding: 32px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }}
         .header {{
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             margin-bottom: 24px;
         }}
+        .user-info {{
+            display: flex;
+            flex-direction: column;
+        }}
         .sender {{
             color: #1a1a1a;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }}
+        .bot-username {{
+            color: #4a9eff;
+            font-size: 14px;
+            font-weight: 400;
         }}
         .menu-dots {{
             color: #666;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-        }}
-        .timestamp {{
-            color: #666;
-            font-size: 14px;
-            font-weight: 400;
-            margin-top: 24px;
+            line-height: 1;
         }}
         .message-content {{
             color: #1a1a1a;
-            line-height: 1.5;
+            line-height: 1.6;
             font-weight: 400;
-            font-size: 18px;
+            font-size: 16px;
             word-break: break-word;
             margin-bottom: 16px;
         }}
+        .message-content a,
+        .message-content .hashtag,
+        .message-content .username {{
+            color: #4a9eff;
+            text-decoration: none;
+        }}
         .heart-icon {{
             position: absolute;
-            bottom: 16px;
-            right: 16px;
-            width: 32px;
-            height: 32px;
+            bottom: -12px;
+            right: 24px;
+            width: 36px;
+            height: 36px;
             background: #ff4757;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
         }}
         img.emoji {{
             height: 1.1em;
@@ -90,17 +102,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="container">
         <div class="message-card">
             <div class="header">
-                <div class="sender">{sender}</div>
+                <div class="user-info">
+                    <div class="sender">{sender}</div>
+                    <div class="bot-username">@askoutbot</div>
+                </div>
                 <div class="menu-dots">•••</div>
             </div>
             <div class="message-content">{message}</div>
-            <div class="timestamp">{timestamp}</div>
             <div class="heart-icon">♥</div>
         </div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function() {{
           twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+          
+          const messageContent = document.querySelector('.message-content');
+          if (messageContent) {{
+              let html = messageContent.innerHTML;
+              // Make hashtags blue
+              html = html.replace(/(#\w+)/g, '<span class="hashtag">$1</span>');
+              // Make usernames blue
+              html = html.replace(/(@\w+)/g, '<span class="username">$1</span>');
+              // Make URLs blue (basic pattern)
+              html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link">$1</a>');
+              messageContent.innerHTML = html;
+          }}
       }});
     </script>
 </body>
