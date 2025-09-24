@@ -100,11 +100,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 def replace_emojis_with_twemoji(text: str) -> str:
     def emoji_to_img(match):
         char = match.group(0)
+        # Build Unicode codepoint(s)
         codepoint = "-".join(f"{ord(c):x}" for c in char)
-        url = f"https://twemoji.maxcdn.com/v/latest/svg/{codepoint}.svg"
+        # Use PNG version (72x72) from Twemoji CDN
+        url = f"https://twemoji.maxcdn.com/v/latest/72x72/{codepoint}.png"
         return f'<img src="{url}" alt="{char}" class="emoji">'
     
-    # Match most emoji ranges
+    # Match a wide range of emoji blocks
     emoji_pattern = re.compile(
         r"[\U0001F600-\U0001F64F"  # emoticons
         r"\U0001F300-\U0001F5FF"   # symbols & pictographs
