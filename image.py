@@ -2,7 +2,6 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
-import re
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -15,7 +14,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
             background: transparent;
         }}
         .container {{
@@ -44,6 +43,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 28px;
             font-size: 32px;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }}
         .timestamp {{
             background: #f1f5f9;
@@ -52,6 +52,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 28px;
             font-size: 26px;
             font-weight: 500;
+            font-family: 'Poppins', sans-serif;
         }}
         .message-content-wrapper {{
             position: relative;
@@ -72,11 +73,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             font-size: 44px;
             word-break: break-word;
-        }}
-        .emoji {{
-            height: 1em;
-            width: 1em;
-            vertical-align: -0.1em;
+            font-family: 'Poppins', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
         }}
     </style>
 </head>
@@ -97,39 +94,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
-def replace_emojis_with_twemoji(text: str) -> str:
-    def emoji_to_img(match):
-        char = match.group(0)
-        # Build Unicode codepoint(s)
-        codepoint = "-".join(f"{ord(c):x}" for c in char)
-        # Use PNG version (72x72) from Twemoji CDN
-        url = f"https://twemoji.maxcdn.com/v/latest/72x72/{codepoint}.png"
-        return f'<img src="{url}" alt="{char}" class="emoji">'
-    
-    # Match a wide range of emoji blocks
-    emoji_pattern = re.compile(
-        r"[\U0001F600-\U0001F64F"  # emoticons
-        r"\U0001F300-\U0001F5FF"   # symbols & pictographs
-        r"\U0001F680-\U0001F6FF"   # transport & map
-        r"\U0001F1E0-\U0001F1FF"   # flags
-        r"\U00002700-\U000027BF"   # dingbats
-        r"\U0001F900-\U0001F9FF"   # supplemental symbols
-        r"\U00002600-\U000026FF"   # misc symbols
-        r"]+", flags=re.UNICODE
-    )
-    return emoji_pattern.sub(emoji_to_img, text)
-
 def generate_message_image(text: str, name: str = "Anonymous", compact: bool = True) -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
     timestamp = "Just now"
 
-    # Replace emojis with Twemoji <img>
-    message_with_emojis = replace_emojis_with_twemoji(text.replace("\n", "<br>"))
-
     html_content = HTML_TEMPLATE.format(
         sender=sender,
         timestamp=timestamp,
-        message=message_with_emojis
+        message=text.replace("\n", "<br>")
     )
 
     temp_dir = tempfile.gettempdir()
@@ -161,5 +133,5 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             pass
 
 # Example usage:
-# img = generate_message_image("Hello 😃👍🏼🚀", "Copilot")
+# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
 # print(img)
