@@ -10,19 +10,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>Message Card</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
+        * {{
             box-sizing: border-box;
-        }
+        }}
         
-        body {
+        body {{
             margin: 0;
             padding: 0;
             font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
             background: transparent;
             -webkit-font-smoothing: antialiased;
-        }
+        }}
         
-        .container {
+        .container {{
             width: 1200px;
             margin: 0 auto;
             padding: 60px;
@@ -32,9 +32,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             justify-content: center;
             position: relative;
-        }
+        }}
         
-        .container::before {
+        .container::before {{
             content: '';
             position: absolute;
             top: 0;
@@ -44,9 +44,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: 
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
-        }
+        }}
         
-        .message-card {
+        .message-card {{
             background: #ffffff;
             border-radius: 0;
             padding: 0;
@@ -58,31 +58,31 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: relative;
             overflow: hidden;
             border: 3px solid #000000;
-        }
+        }}
         
-        .accent-bar {
+        .accent-bar {{
             height: 8px;
             background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
             width: 100%;
-        }
+        }}
         
-        .card-content {
+        .card-content {{
             padding: 48px;
-        }
+        }}
         
-        .header {
+        .header {{
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             margin-bottom: 40px;
             gap: 24px;
-        }
+        }}
         
-        .sender-section {
+        .sender-section {{
             flex: 1;
-        }
+        }}
         
-        .anonymous-label {
+        .anonymous-label {{
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             font-weight: 700;
@@ -94,9 +94,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 6px 12px;
             display: inline-block;
             border: 2px solid #000000;
-        }
+        }}
         
-        .sender-name {
+        .sender-name {{
             font-size: 32px;
             font-weight: 700;
             color: #000000;
@@ -104,9 +104,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             line-height: 1.1;
             text-transform: uppercase;
             letter-spacing: -1px;
-        }
+        }}
         
-        .timestamp {
+        .timestamp {{
             font-family: 'JetBrains Mono', monospace;
             color: #000000;
             font-size: 12px;
@@ -117,13 +117,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
-        }
+        }}
         
-        .message-wrapper {
+        .message-wrapper {{
             position: relative;
-        }
+        }}
         
-        .message-content {
+        .message-content {{
             color: #000000;
             line-height: 1.4;
             font-weight: 500;
@@ -137,9 +137,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             min-height: 120px;
             display: flex;
             align-items: center;
-        }
+        }}
         
-        .quote-mark {
+        .quote-mark {{
             position: absolute;
             top: -8px;
             left: 24px;
@@ -149,15 +149,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 700;
             color: #000000;
             line-height: 1;
-        }
+        }}
         
-        .message-footer {
+        .message-footer {{
             margin-top: 24px;
             display: flex;
             justify-content: flex-end;
-        }
+        }}
         
-        .anonymous-badge {
+        .anonymous-badge {{
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
             font-weight: 700;
@@ -169,14 +169,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             display: flex;
             align-items: center;
             gap: 8px;
-        }
+        }}
         
-        img.emoji {
+        img.emoji {{
             height: 1.1em;
             width: 1.1em;
             margin: 0 .05em;
             vertical-align: -0.15em;
-        }
+        }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
@@ -209,9 +209,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
     
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
-        });
+        document.addEventListener("DOMContentLoaded", function() {{
+            twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+        }});
     </script>
 </body>
 </html>
