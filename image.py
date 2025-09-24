@@ -25,59 +25,124 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .container {{
             width: 1200px;
             margin: 0 auto;
-            padding: 60px;
-            background: #f8fafc;
-            min-height: 500px;
+            padding: 80px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
         }}
         
         .message-card {{
-            background: white;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-            max-width: 800px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 700px;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .message-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
         }}
         
         .card-header {{
-            padding: 32px 40px 24px 40px;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 40px 40px 0 40px;
         }}
         
         .header-content {{
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 32px;
+        }}
+        
+        .sender-info {{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }}
+        
+        .avatar {{
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }}
+        
+        .sender-details {{
+            display: flex;
+            flex-direction: column;
         }}
         
         .sender-name {{
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
-            color: #1e293b;
+            color: #0f172a;
             margin: 0;
+            line-height: 1.2;
+        }}
+        
+        .sender-label {{
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }}
         
         .timestamp {{
             color: #64748b;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
         }}
         
         .message-body {{
-            padding: 24px 40px 40px 40px;
+            padding: 0 40px 40px 40px;
         }}
         
         .message-content {{
-            color: #334155;
+            color: #1e293b;
             line-height: 1.6;
             font-weight: 400;
-            font-size: 32px;
+            font-size: 28px;
             word-break: break-word;
             margin: 0;
+            padding: 32px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border-left: 4px solid #3b82f6;
+            position: relative;
+        }}
+        
+        .message-content::before {{
+            content: '"';
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            font-size: 48px;
+            color: #cbd5e1;
+            font-family: Georgia, serif;
+            line-height: 1;
         }}
         
         img.emoji {{
@@ -94,7 +159,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div class="message-card">
             <div class="card-header">
                 <div class="header-content">
-                    <h1 class="sender-name">{sender}</h1>
+                    <div class="sender-info">
+                        <div class="avatar">🎭</div>
+                        <div class="sender-details">
+                            <h1 class="sender-name">{sender}</h1>
+                            <div class="sender-label">Anonymous Message</div>
+                        </div>
+                    </div>
                     <div class="timestamp">{timestamp}</div>
                 </div>
             </div>
