@@ -10,51 +10,51 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>Message Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        body {{
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
             background: transparent;
-        }
-        .container {
+        }}
+        .container {{
             width: 1200px;
             margin: 0 auto;
             padding: 64px;
             background: linear-gradient(135deg, #f9fafb 0%, #e0f2fe 40%, #dbeafe 100%);
-        }
-        .message-card {
+        }}
+        .message-card {{
             background: rgba(255, 255, 255, 0.95);
             border-radius: 36px;
             padding: 64px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(16px);
-        }
-        .header {
+        }}
+        .header {{
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 40px;
-        }
-        .sender {
+        }}
+        .sender {{
             background: linear-gradient(135deg, #2563eb, #7c3aed);
             color: white;
             padding: 18px 36px;
             border-radius: 24px;
             font-size: 40px;
             font-weight: 700;
-        }
-        .timestamp {
+        }}
+        .timestamp {{
             background: #f1f5f9;
             color: #475569;
             padding: 12px 28px;
             border-radius: 20px;
             font-size: 22px;
             font-weight: 500;
-        }
-        .message-content-wrapper {
+        }}
+        .message-content-wrapper {{
             position: relative;
-        }
-        .message-gradient {
+        }}
+        .message-gradient {{
             position: absolute;
             left: 0;
             top: 0;
@@ -62,21 +62,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             height: 100%;
             background: linear-gradient(to bottom, #2563eb, #7c3aed);
             border-radius: 4px;
-        }
-        .message-content {
+        }}
+        .message-content {{
             padding-left: 48px;
             color: #1e293b;
             line-height: 1.9;
             font-weight: 500;
             font-size: 46px;
             word-break: break-word;
-        }
-        img.emoji {
+        }}
+        img.emoji {{
             height: 1.1em;
             width: 1.1em;
             margin: 0 .05em;
             vertical-align: -0.15em;
-        }
+        }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
@@ -94,9 +94,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-          twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
-      });
+      document.addEventListener("DOMContentLoaded", function() {{
+          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+      }});
     </script>
 </body>
 </html>
@@ -141,7 +141,6 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
             pass
 
 
-# Example usage:
 if __name__ == "__main__":
     img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
     print("Generated image path:", img)
