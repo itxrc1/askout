@@ -11,12 +11,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>Askout Message Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-        }
-        * {
+        :root {{
+            color-scheme: light;
+        }}
+        * {{
             box-sizing: border-box;
-        }
-        body {
+        }}
+        body {{
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
@@ -25,15 +26,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-        }
-        .stage {
+        }}
+        .stage {{
             position: relative;
             width: 1200px;
             padding: 96px 88px 120px;
             background: #FFF5EF;
             border-radius: 56px;
-        }
-        .stage::before {
+        }}
+        .stage::before {{
             content: "";
             position: absolute;
             top: 28px;
@@ -43,77 +44,95 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             height: 20px;
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.08);
-        }
-        .card {
+        }}
+        .card {{
             position: relative;
             background: #FFFFFF;
             border: 3px solid #D44A52;
             border-radius: 36px;
-            padding: 72px 76px 96px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            gap: 48px;
             box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
-        }
-        .profile {
+        }}
+        /* Added gradient header section */
+        .gradient-header {{
+            background: linear-gradient(135deg, 
+                #a8edea 0%, 
+                #fed6e3 25%, 
+                #d299c2 50%, 
+                #fef9d7 75%, 
+                #85d8ce 100%);
+            padding: 48px 76px 32px;
+            position: relative;
+        }}
+        .bot-name {{
+            font-size: 48px;
+            font-weight: 800;
+            color: #1F2933;
+            text-align: center;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+        }}
+        /* Updated card content area */
+        .card-content {{
+            padding: 48px 76px 96px;
+            background: #FFFFFF;
+            flex: 1;
+        }}
+        .profile {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 32px;
-            background: linear-gradient(135deg, #A8E6CE, #D4A5EF, #F2D7D9);
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .profile-left {
+            margin-bottom: 32px;
+        }}
+        .profile-left {{
             display: flex;
             align-items: center;
             gap: 28px;
-        }
-        .profile-meta {
+        }}
+        .profile-meta {{
             display: flex;
             flex-direction: column;
             gap: 6px;
-        }
-        .sender-name {
-            font-size: 44px;
-            font-weight: 700;
+        }}
+        .sender-name {{
+            font-size: 32px;
+            font-weight: 600;
             color: #1F2933;
             letter-spacing: -0.015em;
             text-wrap: balance;
-        }
-        .sender-handle {
-            font-size: 26px;
+        }}
+        .sender-handle {{
+            font-size: 22px;
             font-weight: 500;
             color: #3A9EC7;
-        }
-        .menu-dots {
+        }}
+        .menu-dots {{
             display: flex;
             flex-direction: row;
             gap: 12px;
             margin-top: 16px;
-        }
-        .menu-dots span {
+        }}
+        .menu-dots span {{
             width: 12px;
             height: 12px;
             border-radius: 50%;
             background: #D0D5DD;
-        }
-        .message {
+        }}
+        .message {{
             font-size: 42px;
             line-height: 1.65;
             color: #1F2933;
             font-weight: 500;
             word-break: break-word;
-            margin-top: 20px;
-        }
-        .profile + .message {
-            margin-top: 20px;
-        }
-        .message .hashtag {
+        }}
+        .message .hashtag {{
             color: #3A9EC7;
             font-weight: 600;
-        }
-        .heart-badge {
+        }}
+        .heart-badge {{
             position: absolute;
             right: 84px;
             bottom: -38px;
@@ -125,38 +144,47 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             justify-content: center;
             box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
-        }
-        .heart-badge svg {
+        }}
+        .heart-badge svg {{
             width: 40px;
             height: 40px;
             fill: #FFFFFF;
-        }
-        img.emoji {
+        }}
+        img.emoji {{
             height: 1.1em;
             width: 1.1em;
             margin: 0 .05em;
             vertical-align: -0.15em;
-        }
+        }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="stage" role="presentation">
         <article class="card" aria-labelledby="sender-name">
-            <header class="profile">
-                <div class="profile-left">
-                    <div class="profile-meta">
-                        <div class="sender-name" id="sender-name">{sender}</div>
-                        <div class="sender-handle">{sender_handle}</div>
+            <!-- Added gradient header with bot name -->
+            <div class="gradient-header">
+                <div class="bot-name">MESSAGE</div>
+            </div>
+            
+            <!-- Moved content to separate section -->
+            <div class="card-content">
+                <header class="profile">
+                    <div class="profile-left">
+                        <div class="profile-meta">
+                            <div class="sender-name" id="sender-name">{sender}</div>
+                            <div class="sender-handle">{sender_handle}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="menu-dots" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </header>
-            <div class="message">{message}</div>
+                    <div class="menu-dots" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </header>
+                <div class="message">{message}</div>
+            </div>
+            
             <div class="heart-badge" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 21s-5.7-4.46-8.4-7.18C1.86 11.08 1 9.37 1 7.5 1 4.42 3.42 2 6.5 2 8.24 2 9.91 2.81 11 4.09 12.09 2.81 13.76 2 15.5 2 18.58 2 21 4.42 21 7.5c0 1.87-.86 3.58-2.6 6.32C17.7 16.54 12 21 12 21z"/>
@@ -165,9 +193,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </article>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-          twemoji.parse(document.body, {folder: "svg", ext: ".svg"});
-      });
+      document.addEventListener("DOMContentLoaded", function() {{
+          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+      }});
     </script>
 </body>
 </html>
