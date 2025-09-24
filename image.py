@@ -186,8 +186,8 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     timestamp = "Just now"
     sender_clean = sender.strip()
     sender_initial = sender_clean[:1].upper() if sender_clean else "A"
-    slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "Askoutbot"
-    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "Askoutbot"
+    slug_source = sender_clean if sender_clean and sender_clean.lower() != "anonymous" else "askoutbot"
+    handle_slug = re.sub(r"[^a-z0-9_]+", "", slug_source.lower().replace(" ", "_")) or "askoutbot"
     sender_handle = f"@{handle_slug}"
     hashtagged = re.sub(r"(?<!\w)#([A-Za-z0-9_]+)", r'<span class="hashtag">#\1</span>', text)
     formatted_message = hashtagged.replace("\n", "<br>")
