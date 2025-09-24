@@ -11,13 +11,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <title>Askout Message Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {{
+        :root {
             color-scheme: light;
-        }}
-        * {{
+        }
+        * {
             box-sizing: border-box;
-        }}
-        body {{
+        }
+        body {
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
@@ -26,15 +26,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-        }}
-        .stage {{
+        }
+        .stage {
             position: relative;
             width: 1200px;
             padding: 96px 88px 120px;
             background: #FFF5EF;
             border-radius: 56px;
-        }}
-        .stage::before {{
+        }
+        .stage::before {
             content: "";
             position: absolute;
             top: 28px;
@@ -44,8 +44,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             height: 20px;
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.08);
-        }}
-        .card {{
+        }
+        .card {
             position: relative;
             background: #FFFFFF;
             border: 3px solid #D44A52;
@@ -55,62 +55,65 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             flex-direction: column;
             gap: 48px;
             box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
-        }}
-        .profile {{
+        }
+        .profile {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 32px;
-        }}
-        .profile-left {{
+            background: linear-gradient(135deg, #A8E6CE, #D4A5EF, #F2D7D9);
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .profile-left {
             display: flex;
             align-items: center;
             gap: 28px;
-        }}
-        .profile-meta {{
+        }
+        .profile-meta {
             display: flex;
             flex-direction: column;
             gap: 6px;
-        }}
-        .sender-name {{
+        }
+        .sender-name {
             font-size: 44px;
             font-weight: 700;
             color: #1F2933;
             letter-spacing: -0.015em;
             text-wrap: balance;
-        }}
-        .sender-handle {{
+        }
+        .sender-handle {
             font-size: 26px;
             font-weight: 500;
             color: #3A9EC7;
-        }}
-        .menu-dots {{
+        }
+        .menu-dots {
             display: flex;
             flex-direction: row;
             gap: 12px;
             margin-top: 16px;
-        }}
-        .menu-dots span {{
+        }
+        .menu-dots span {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             background: #D0D5DD;
-        }}
-        .message {{
+        }
+        .message {
             font-size: 42px;
             line-height: 1.65;
             color: #1F2933;
             font-weight: 500;
             word-break: break-word;
-        }}
-        .profile + .message {{
+        }
+        .profile + .message {
             margin-top: 20px;
-        }}
-        .message .hashtag {{
+        }
+        .message .hashtag {
             color: #3A9EC7;
             font-weight: 600;
-        }}
-        .heart-badge {{
+        }
+        .heart-badge {
             position: absolute;
             right: 84px;
             bottom: -38px;
@@ -122,18 +125,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             align-items: center;
             justify-content: center;
             box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
-        }}
-        .heart-badge svg {{
+        }
+        .heart-badge svg {
             width: 40px;
             height: 40px;
             fill: #FFFFFF;
-        }}
-        img.emoji {{
+        }
+        img.emoji {
             height: 1.1em;
             width: 1.1em;
             margin: 0 .05em;
             vertical-align: -0.15em;
-        }}
+        }
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
@@ -162,9 +165,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </article>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {{
-          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
-      }});
+      document.addEventListener("DOMContentLoaded", function() {
+          twemoji.parse(document.body, {folder: "svg", ext: ".svg"}});
+      });
     </script>
 </body>
 </html>
