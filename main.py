@@ -375,7 +375,7 @@ async def stats_command(message: Message):
             clicks_today=clicks_today
         )
     )
-    
+
 @router.message(F.text)
 async def handle_anonymous_message(message: Message, state: FSMContext):
     lang = await get_user_lang(message.from_user.id)
@@ -398,38 +398,33 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         )
 
         # --- Image or text sending ---
-        # --- Image or text sending ---
-if GENERATE_IMAGE_ON_ANONYMOUS:
-    file_path = generate_message_image(message.text)  # should return string path
-    caption = LANGS[user.get("language", "en")]["anonymous_received"]
+        if GENERATE_IMAGE_ON_ANONYMOUS:
+            file_path = generate_message_image(message.text)  # should return string path
+            caption = LANGS[user.get("language", "en")]["anonymous_received"]
 
-    if file_path:
-        try:
-            # Upload as document so Telegram keeps transparency
-            sent_msg = await bot.send_document(
-                user["user_id"],
-                document=FSInputFile(file_path),
-                caption=caption
-            )
-        finally:
-            # Delete file after sending
-            if os.path.exists(file_path):
-                os.remove(file_path)
-    else:
-        # Fallback if image generation fails
-        sent_msg = await bot.send_message(
-            user["user_id"],
-            caption
-        )
-else:
-    sent_msg = await bot.send_message(
-        user["user_id"],
-        LANGS[user.get("language", "en")]["anonymous_received"].format(message=message.text)
-    )
+            if file_path:
+                try:
+                    # Upload as document so Telegram keeps transparency
+                    sent_msg = await bot.send_document(
+                        user["user_id"],
+                        document=FSInputFile(file_path),
+                        caption=caption
+                    )
+                finally:
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+            else:
+                # Fallback if image generation fails
+                sent_msg = await bot.send_message(
+                    user["user_id"],
+                    caption
+                )
         else:
             sent_msg = await bot.send_message(
                 user["user_id"],
-                LANGS[user.get("language", "en")]["anonymous_received"].format(message=message.text)
+                LANGS[user.get("language", "en")]["anonymous_received"].format(
+                    message=message.text
+                )
             )
 
         # Save link for replies
