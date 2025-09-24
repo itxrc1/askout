@@ -14,7 +14,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Noto Color Emoji', 'Segoe UI Emoji', 'Apple Color Emoji', 'Twemoji', 'EmojiOne', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: transparent;
         }}
         .container {{
@@ -43,6 +43,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 28px;
             font-size: 32px;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }}
         .timestamp {{
             background: #f1f5f9;
@@ -51,6 +52,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 28px;
             font-size: 26px;
             font-weight: 500;
+            font-family: 'Poppins', sans-serif;
         }}
         .message-content-wrapper {{
             position: relative;
@@ -71,8 +73,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             font-size: 44px;
             word-break: break-word;
+            font-family: 'Poppins', sans-serif;
+        }}
+        img.emoji {{
+            height: 1em;
+            width: 1em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
         }}
     </style>
+    <!-- Twemoji script -->
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container" id="message-card">
@@ -87,6 +98,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </div>
         </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {{
+          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+      }});
+    </script>
 </body>
 </html>
 """
@@ -112,6 +128,7 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
         "width": "1200",   # matches the HTML container width
         "encoding": "UTF-8",
         "quiet": "",
+        "enable-local-file-access": "",  # required for Twemoji SVGs
     }
 
     try:
@@ -130,5 +147,5 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             pass
 
 # Example usage:
-# img = generate_message_image("Your message 😃👍🏼🚀", "Copilot")
-# print(img) to 
+# img = generate_message_image("Your message 😃👍🏼🚀❤️🇵🇰", "Copilot")
+# print(img)
