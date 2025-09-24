@@ -8,7 +8,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Message Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {{
             box-sizing: border-box;
@@ -17,7 +17,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: transparent;
             -webkit-font-smoothing: antialiased;
         }}
@@ -25,9 +25,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .container {{
             width: 1200px;
             margin: 0 auto;
-            padding: 60px;
-            background: #0a0a0a;
-            min-height: 600px;
+            padding: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 700px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,133 +42,150 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
         }}
         
         .message-card {{
-            background: #ffffff;
-            border-radius: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 0;
             box-shadow: 
-                0 0 0 3px #000000,
-                12px 12px 0 0 #000000;
-            max-width: 800px;
+                0 32px 64px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 700px;
             width: 100%;
             position: relative;
             overflow: hidden;
-            border: 3px solid #000000;
         }}
         
-        .accent-bar {{
-            height: 8px;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-            width: 100%;
+        .card-header {{
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            padding: 32px 40px 24px;
+            position: relative;
         }}
         
-        .card-content {{
-            padding: 48px;
+        .card-header::after {{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
         }}
         
-        .header {{
+        .bot-info {{
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }}
+        
+        .bot-avatar {{
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+        
+        .bot-details h3 {{
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.3px;
+        }}
+        
+        .bot-details p {{
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+        }}
+        
+        .message-meta {{
+            display: flex;
             justify-content: space-between;
-            margin-bottom: 40px;
-            gap: 24px;
-        }}
-        
-        .sender-section {{
-            flex: 1;
-        }}
-        
-        .anonymous-label {{
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: 700;
-            color: #666666;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            background: #f5f5f5;
-            padding: 6px 12px;
-            display: inline-block;
-            border: 2px solid #000000;
+            align-items: center;
         }}
         
         .sender-name {{
-            font-size: 32px;
-            font-weight: 700;
-            color: #000000;
-            margin: 0;
-            line-height: 1.1;
-            text-transform: uppercase;
-            letter-spacing: -1px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }}
         
         .timestamp {{
-            font-family: 'JetBrains Mono', monospace;
-            color: #000000;
-            font-size: 12px;
-            font-weight: 500;
-            background: #ffff00;
-            padding: 12px 16px;
-            border: 2px solid #000000;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-family: 'Fira Code', monospace;
         }}
         
-        .message-wrapper {{
-            position: relative;
+        .card-content {{
+            padding: 40px;
         }}
         
         .message-content {{
-            color: #000000;
-            line-height: 1.4;
-            font-weight: 500;
-            font-size: 24px;
+            color: #2d3748;
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 20px;
             word-break: break-word;
             margin: 0;
-            padding: 32px;
-            background: #f8f8f8;
-            border: 3px solid #000000;
             position: relative;
-            min-height: 120px;
+            min-height: 80px;
             display: flex;
             align-items: center;
         }}
         
-        .quote-mark {{
+        .message-content::before {{
+            content: '"';
             position: absolute;
-            top: -8px;
-            left: 24px;
-            background: #ffffff;
-            padding: 0 8px;
-            font-size: 48px;
+            top: -20px;
+            left: -10px;
+            font-size: 80px;
+            color: #e2e8f0;
             font-weight: 700;
-            color: #000000;
             line-height: 1;
+            z-index: 0;
         }}
         
-        .message-footer {{
-            margin-top: 24px;
+        .message-text {{
+            position: relative;
+            z-index: 1;
+        }}
+        
+        .card-footer {{
+            padding: 0 40px 32px;
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
         }}
         
         .anonymous-badge {{
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            color: #ffffff;
-            background: #000000;
-            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
         }}
         
         img.emoji {{
@@ -183,26 +200,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
     <div class="container">
         <div class="message-card">
-            <div class="accent-bar"></div>
-            
-            <div class="card-content">
-                <div class="header">
-                    <div class="sender-section">
-                        <div class="anonymous-label">Anonymous</div>
-                        <h1 class="sender-name">{sender}</h1>
+            <div class="card-header">
+                <div class="bot-info">
+                    <div class="bot-avatar">💕</div>
+                    <div class="bot-details">
+                        <h3>Askout Bot</h3>
+                        <p>@Askoutbot</p>
                     </div>
+                </div>
+                
+                <div class="message-meta">
+                    <div class="sender-name">From: {sender}</div>
                     <div class="timestamp">{timestamp}</div>
                 </div>
-                
-                <div class="message-wrapper">
-                    <div class="quote-mark">"</div>
-                    <div class="message-content">{message}</div>
+            </div>
+            
+            <div class="card-content">
+                <div class="message-content">
+                    <div class="message-text">{message}</div>
                 </div>
-                
-                <div class="message-footer">
-                    <div class="anonymous-badge">
-                        🎭 ANONYMOUS MESSAGE
-                    </div>
+            </div>
+            
+            <div class="card-footer">
+                <div class="anonymous-badge">
+                    🎭 Anonymous Message
                 </div>
             </div>
         </div>
