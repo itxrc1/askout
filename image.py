@@ -2,113 +2,121 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
-import re  # Added re module for regex processing
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Message Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
         }}
         .container {{
-            width: 600px;
-            padding: 40px;
-            background: #f5f5f5;
+            width: 1200px;
+            margin: 0 auto;
+            padding: 48px;
+            background: #0a0a0a;
         }}
         .message-card {{
-            background: white;
-            border: 1.5px solid #e8a298;
-            border-radius: 20px;
+            background: #111111;
+            border: 1px solid #1e1e1e;
+            border-radius: 16px;
             padding: 32px;
-            position: relative;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }}
         .header {{
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             margin-bottom: 24px;
-        }}
-        .user-info {{
-            display: flex;
-            flex-direction: column;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #1e1e1e;
         }}
         .sender {{
-            color: #1a1a1a;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }}
-        .bot-username {{
-            color: #4a9eff;
+            background: #ffffff;
+            color: #000000;
+            padding: 8px 16px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 400;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }}
-        .menu-dots {{
-            color: #666;
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 1;
+        .timestamp {{
+            background: #1e1e1e;
+            color: #888888;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }}
+        .message-content-wrapper {{
+            position: relative;
+        }}
+        .message-indicator {{
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 3px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 2px;
         }}
         .message-content {{
-            color: #1a1a1a;
+            padding-left: 20px;
+            color: #ffffff;
             line-height: 1.6;
             font-weight: 400;
-            font-size: 16px;
-            word-break: break-word;
-            margin-bottom: 16px;
-        }}
-        .message-content .hashtag,
-        .message-content .username,
-        .message-content .link {{
-            color: #4a9eff;
-            text-decoration: none;
-        }}
-        .heart-icon {{
-            position: absolute;
-            bottom: -12px;
-            right: 24px;
-            width: 36px;
-            height: 36px;
-            background: #ff4757;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
             font-size: 18px;
-            box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+            word-break: break-word;
+        }}
+        .bot-branding {{
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #1e1e1e;
+            text-align: center;
+        }}
+        .bot-name {{
+            color: #666666;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }}
+        img.emoji {{
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em;
+            vertical-align: -0.2em;
         }}
     </style>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="message-card">
         <div class="message-card">
             <div class="header">
-                <div class="user-info">
-                    <div class="sender">{sender}</div>
-                    <div class="bot-username">@askoutbot</div>
-                </div>
-                <div class="menu-dots">•••</div>
+                <div class="sender">{sender}</div>
+                <div class="timestamp">{timestamp}</div>
             </div>
-            <div class="message-content">{message}</div>
-            <div class="heart-icon">♥</div>
+            <div class="message-content-wrapper">
+                <div class="message-indicator"></div>
+                <div class="message-content">{message}</div>
+            </div>
+            <div class="bot-branding">
+                <div class="bot-name">Askout Bot</div>
+            </div>
         </div>
     </div>
     <script>
-        twemoji.parse(document.body);
+      document.addEventListener("DOMContentLoaded", function() {{
+          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
+      }});
     </script>
 </body>
 </html>
@@ -116,18 +124,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 def generate_message_image(text: str, name: str = "Anonymous") -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
-    
-    processed_message = text.replace("\n", "<br>")
-    # Make hashtags blue
-    processed_message = re.sub(r'(#\w+)', r'<span class="hashtag">\1</span>', processed_message)
-    # Make usernames blue  
-    processed_message = re.sub(r'(@\w+)', r'<span class="username">\1</span>', processed_message)
-    # Make URLs blue (basic pattern)
-    processed_message = re.sub(r'(https?://[^\s]+)', r'<span class="link">\1</span>', processed_message)
-    
+    timestamp = "Just now"
+
     html_content = HTML_TEMPLATE.format(
         sender=sender,
-        message=processed_message
+        timestamp=timestamp,
+        message=text.replace("\n", "<br>")
     )
 
     temp_dir = tempfile.gettempdir()
@@ -138,7 +140,7 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
 
     options = {
         "format": "png",
-        "width": "600",
+        "width": "1300",
         "encoding": "UTF-8",
         "quiet": "",
     }
@@ -157,6 +159,7 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
