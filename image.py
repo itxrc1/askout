@@ -8,7 +8,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Generate PNG</title>
-    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {{
@@ -82,7 +81,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             vertical-align: -0.1em;
         }}
     </style>
-    <!-- Twemoji script -->
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -125,10 +123,10 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
 
     options = {
         "format": "png",
-        "width": "1200",   # matches the HTML container width
+        "width": "1200",
         "encoding": "UTF-8",
         "quiet": "",
-        "enable-local-file-access": "",  # required for Twemoji SVGs
+        "enable-local-file-access": "",
     }
 
     try:
@@ -145,7 +143,3 @@ def generate_message_image(text: str, name: str = "Anonymous", compact: bool = T
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
-
-# Example usage:
-# img = generate_message_image("Your message 😃👍🏼🚀❤️🇵🇰", "Copilot")
-# print(img)
