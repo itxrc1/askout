@@ -398,25 +398,34 @@ async def handle_anonymous_message(message: Message, state: FSMContext):
         )
 
         # --- Image or text sending ---
-        if GENERATE_IMAGE_ON_ANONYMOUS:
-            image_path = generate_message_image(message.text)
-            caption = LANGS[user.get("language", "en")]["anonymous_received"]
+        # --- Image or text sending ---
+if GENERATE_IMAGE_ON_ANONYMOUS:
+    file_path = generate_message_image(message.text)  # should return string path
+    caption = LANGS[user.get("language", "en")]["anonymous_received"]
 
-            if image_path:
-                try:
-                    sent_msg = await bot.send_document(
-                        user["user_id"],
-                        document=FSInputFile(image_path),
-                        caption=caption
-                    )
-                finally:
-                    if os.path.exists(image_path):
-                        os.remove(image_path)
-            else:
-                sent_msg = await bot.send_message(
-                    user["user_id"],
-                    caption
-                )
+    if file_path:
+        try:
+            # Upload as document so Telegram keeps transparency
+            sent_msg = await bot.send_document(
+                user["user_id"],
+                document=FSInputFile(file_path),
+                caption=caption
+            )
+        finally:
+            # Delete file after sending
+            if os.path.exists(file_path):
+                os.remove(file_path)
+    else:
+        # Fallback if image generation fails
+        sent_msg = await bot.send_message(
+            user["user_id"],
+            caption
+        )
+else:
+    sent_msg = await bot.send_message(
+        user["user_id"],
+        LANGS[user.get("language", "en")]["anonymous_received"].format(message=message.text)
+    )
         else:
             sent_msg = await bot.send_message(
                 user["user_id"],
