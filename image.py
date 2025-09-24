@@ -2,19 +2,21 @@ import pathlib
 import tempfile
 import uuid
 import imgkit
+import re  # Added re module for regex processing
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Message Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
     <style>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: #f0f0f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,15 +25,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .container {{
             width: 600px;
             padding: 40px;
-            background: #f0f0f0;
+            background: #f5f5f5;
         }}
         .message-card {{
             background: white;
-            border: 1.5px solid #ff9999;
+            border: 1.5px solid #e8a298;
             border-radius: 20px;
             padding: 32px;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         }}
         .header {{
             display: flex;
@@ -68,9 +70,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             word-break: break-word;
             margin-bottom: 16px;
         }}
-        .message-content a,
         .message-content .hashtag,
-        .message-content .username {{
+        .message-content .username,
+        .message-content .link {{
             color: #4a9eff;
             text-decoration: none;
         }}
@@ -89,14 +91,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 18px;
             box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
         }}
-        img.emoji {{
-            height: 1.1em;
-            width: 1.1em;
-            margin: 0 .05em;
-            vertical-align: -0.15em;
-        }}
     </style>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
@@ -113,21 +108,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
     </div>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {{
-          twemoji.parse(document.body, {{folder: "svg", ext: ".svg"}});
-          
-          const messageContent = document.querySelector('.message-content');
-          if (messageContent) {{
-              let html = messageContent.innerHTML;
-              // Make hashtags blue
-              html = html.replace(/(#\w+)/g, '<span class="hashtag">$1</span>');
-              // Make usernames blue
-              html = html.replace(/(@\w+)/g, '<span class="username">$1</span>');
-              // Make URLs blue (basic pattern)
-              html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link">$1</a>');
-              messageContent.innerHTML = html;
-          }}
-      }});
+        twemoji.parse(document.body);
     </script>
 </body>
 </html>
@@ -135,12 +116,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 def generate_message_image(text: str, name: str = "Anonymous") -> str:
     sender = name if (name and isinstance(name, str)) else "Anonymous"
-    timestamp = "Just now"
-
+    
+    processed_message = text.replace("\n", "<br>")
+    # Make hashtags blue
+    processed_message = re.sub(r'(#\w+)', r'<span class="hashtag">\1</span>', processed_message)
+    # Make usernames blue  
+    processed_message = re.sub(r'(@\w+)', r'<span class="username">\1</span>', processed_message)
+    # Make URLs blue (basic pattern)
+    processed_message = re.sub(r'(https?://[^\s]+)', r'<span class="link">\1</span>', processed_message)
+    
     html_content = HTML_TEMPLATE.format(
         sender=sender,
-        timestamp=timestamp,
-        message=text.replace("\n", "<br>")
+        message=processed_message
     )
 
     temp_dir = tempfile.gettempdir()
@@ -170,7 +157,6 @@ def generate_message_image(text: str, name: str = "Anonymous") -> str:
             html_path.unlink(missing_ok=True)
         except Exception:
             pass
-
 
 if __name__ == "__main__":
     img = generate_message_image("Hello 😃🔥✨🚀 This looks strong & modern!", "Copilot")
