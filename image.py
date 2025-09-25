@@ -12,7 +12,6 @@ COLOR_PALETTES = [
         "border": "#D44A52",
         "shadow": "rgba(212, 74, 82, 0.08)",
         "sender_name": "#1F2933",
-        "sender_handle": "#3A9EC7",
         "menu_dots": "#D0D5DD",
         "message": "#1F2933",
         "hashtag": "#3A9EC7",
@@ -25,7 +24,6 @@ COLOR_PALETTES = [
         "border": "#00BCD4",
         "shadow": "rgba(0, 188, 212, 0.08)",
         "sender_name": "#263238",
-        "sender_handle": "#0097A7",
         "menu_dots": "#B2EBF2",
         "message": "#263238",
         "hashtag": "#0097A7",
@@ -38,7 +36,6 @@ COLOR_PALETTES = [
         "border": "#9C27B0",
         "shadow": "rgba(156, 39, 176, 0.08)",
         "sender_name": "#4A148C",
-        "sender_handle": "#7B1FA2",
         "menu_dots": "#E1BEE7",
         "message": "#4A148C",
         "hashtag": "#7B1FA2",
@@ -51,7 +48,6 @@ COLOR_PALETTES = [
         "border": "#FFC107",
         "shadow": "rgba(255, 193, 7, 0.08)",
         "sender_name": "#FF6F00",
-        "sender_handle": "#FFA000",
         "menu_dots": "#FFECB3",
         "message": "#FF6F00",
         "hashtag": "#FFA000",
@@ -64,7 +60,6 @@ COLOR_PALETTES = [
         "border": "#4CAF50",
         "shadow": "rgba(76, 175, 80, 0.08)",
         "sender_name": "#2E7D32",
-        "sender_handle": "#388E3C",
         "menu_dots": "#C8E6C9",
         "message": "#2E7D32",
         "hashtag": "#388E3C",
@@ -151,7 +146,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .sender-handle {{
             font-size: 26px;
             font-weight: 500;
-            color: {sender_handle}; /* Use dynamic sender handle color */
+            color: {sender_handle_color}; /* Use dynamic sender handle color */
         }}
         .menu-dots {{
             display: flex;
@@ -251,6 +246,7 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     formatted_message = hashtagged.replace("\n", "<br>")
 
     selected_palette = random.choice(COLOR_PALETTES)
+    sender_handle_color = "#3A9EC7"  # Default color for sender handle
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
@@ -258,7 +254,8 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
         sender_handle=sender_handle,
         timestamp=timestamp,
         message=formatted_message,
-        **selected_palette # Pass the selected palette colors to the template
+        sender_handle_color=sender_handle_color,
+        **{k: v for k, v in selected_palette.items() if k != 'sender_handle'}
     )
 
     temp_dir = tempfile.gettempdir()
