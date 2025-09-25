@@ -21,7 +21,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #FFF5EF;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,7 +31,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: relative;
             width: 1200px;
             padding: 96px 88px 120px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #FFF5EF;
             border-radius: 56px;
         }}
         .stage::before {{
@@ -48,26 +48,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card {{
             position: relative;
             background: #FFFFFF;
-            border: 3px solid #89f7fe;
+            border: 3px solid #D44A52;
             border-radius: 36px;
+            padding: 72px 76px 96px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 28px 70px rgba(137, 247, 254, 0.15);
-        }}
-        /* Updated gradient header with more modern, tech-inspired holographic colors */
-        .gradient-header {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 15%, #89f7fe 30%, #66a6ff 45%, #4facfe 60%, #00f2fe 75%, #4facfe 90%, #667eea 100%);
-            padding: 48px 76px 32px;
-            position: relative;
-            border-top-left-radius: 33px;
-            border-top-right-radius: 33px;
+            gap: 48px;
+            box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
         }}
         .profile {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 32px;
-            margin: 0;
         }}
         .profile-left {{
             display: flex;
@@ -79,23 +72,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             flex-direction: column;
             gap: 6px;
         }}
-        /* Updated sender name color for gradient background */
         .sender-name {{
             font-size: 44px;
             font-weight: 700;
-            color: #FFFFFF;
+            color: #1F2933;
             letter-spacing: -0.015em;
             text-wrap: balance;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }}
-        /* Updated sender handle color for gradient background */
         .sender-handle {{
             font-size: 26px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: #3A9EC7;
         }}
-        /* Updated menu dots color for gradient background */
         .menu-dots {{
             display: flex;
             flex-direction: row;
@@ -106,14 +94,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-        }}
-        /* Added message container with separate styling */
-        .message-container {{
-            padding: 48px 76px 96px;
-            background: #FFFFFF;
-            border-bottom-left-radius: 33px;
-            border-bottom-right-radius: 33px;
+            background: #D0D5DD;
         }}
         .message {{
             font-size: 42px;
@@ -121,13 +102,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #1F2933;
             font-weight: 500;
             word-break: break-word;
-            margin: 0;
+        }}
+        .profile + .message {{
+            margin-top: 20px;
         }}
         .message .hashtag {{
             color: #3A9EC7;
             font-weight: 600;
         }}
-        /* Updated heart badge to match the new tech-inspired holographic theme */
         .heart-badge {{
             position: absolute;
             right: 84px;
@@ -135,11 +117,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 96px;
             height: 96px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #89f7fe 100%);
+            background: #D44A52;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
         }}
         .heart-badge svg {{
             width: 40px;
@@ -158,26 +140,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
     <div class="stage" role="presentation">
         <article class="card" aria-labelledby="sender-name">
-            <!-- Moved profile section into gradient header -->
-            <div class="gradient-header">
-                <header class="profile">
-                    <div class="profile-left">
-                        <div class="profile-meta">
-                            <div class="sender-name" id="sender-name">{sender}</div>
-                            <div class="sender-handle">{sender_handle}</div>
-                        </div>
+            <header class="profile">
+                <div class="profile-left">
+                    <div class="profile-meta">
+                        <div class="sender-name" id="sender-name">{sender}</div>
+                        <div class="sender-handle">{sender_handle}</div>
                     </div>
-                    <div class="menu-dots" aria-hidden="true">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                </header>
-            </div>
-            <!-- Moved message into separate container -->
-            <div class="message-container">
-                <div class="message">{message}</div>
-            </div>
+                </div>
+                <div class="menu-dots" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </header>
+            <div class="message">{message}</div>
             <div class="heart-badge" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 21s-5.7-4.46-8.4-7.18C1.86 11.08 1 9.37 1 7.5 1 4.42 3.42 2 6.5 2 8.24 2 9.91 2.81 11 4.09 12.09 2.81 13.76 2 15.5 2 18.58 2 21 4.42 21 7.5c0 1.87-.86 3.58-2.6 6.32C17.7 16.54 12 21 12 21z"/>
