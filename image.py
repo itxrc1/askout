@@ -13,7 +13,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(212, 74, 82, 0.08)",
         "sender_name": "#1F2933",
         "menu_dots": "#D0D5DD",
-        "message": "#1F2933",
+        "message_color": "#1F2933", # Renamed 'message' to 'message_color'
         "hashtag": "#3A9EC7",
         "heart_badge_bg": "#D44A52",
         "heart_badge_shadow": "rgba(212, 74, 82, 0.25)"
@@ -25,7 +25,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(0, 188, 212, 0.08)",
         "sender_name": "#263238",
         "menu_dots": "#B2EBF2",
-        "message": "#263238",
+        "message_color": "#263238", # Renamed 'message' to 'message_color'
         "hashtag": "#0097A7",
         "heart_badge_bg": "#00BCD4",
         "heart_badge_shadow": "rgba(0, 188, 212, 0.25)"
@@ -37,7 +37,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(156, 39, 176, 0.08)",
         "sender_name": "#4A148C",
         "menu_dots": "#E1BEE7",
-        "message": "#4A148C",
+        "message_color": "#4A148C", # Renamed 'message' to 'message_color'
         "hashtag": "#7B1FA2",
         "heart_badge_bg": "#9C27B0",
         "heart_badge_shadow": "rgba(156, 39, 176, 0.25)"
@@ -49,7 +49,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(255, 193, 7, 0.08)",
         "sender_name": "#FF6F00",
         "menu_dots": "#FFECB3",
-        "message": "#FF6F00",
+        "message_color": "#FF6F00", # Renamed 'message' to 'message_color'
         "hashtag": "#FFA000",
         "heart_badge_bg": "#FFC107",
         "heart_badge_shadow": "rgba(255, 193, 7, 0.25)"
@@ -61,7 +61,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(76, 175, 80, 0.08)",
         "sender_name": "#2E7D32",
         "menu_dots": "#C8E6C9",
-        "message": "#2E7D32",
+        "message_color": "#2E7D32", # Renamed 'message' to 'message_color'
         "hashtag": "#388E3C",
         "heart_badge_bg": "#4CAF50",
         "heart_badge_shadow": "rgba(76, 175, 80, 0.25)"
@@ -163,7 +163,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .message {{
             font-size: 42px;
             line-height: 1.65;
-            color: {message}; /* Use dynamic message color */
+            color: {message_color}; /* Use dynamic message color */
             font-weight: 500;
             word-break: break-word;
         }}
@@ -217,7 +217,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     <span></span>
                 </div>
             </header>
-            <div class="message">{message}</div>
+            <div class="message">{message_content}</div> <!-- Changed placeholder to message_content -->
             <div class="heart-badge" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 21s-5.7-4.46-8.4-7.18C1.86 11.08 1 9.37 1 7.5 1 4.42 3.42 2 6.5 2 8.24 2 9.91 2.81 11 4.09 12.09 2.81 13.76 2 15.5 2 18.58 2 21 4.42 21 7.5c0 1.87-.86 3.58-2.6 6.32C17.7 16.54 12 21 12 21z"/>
@@ -246,16 +246,18 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     formatted_message = hashtagged.replace("\n", "<br>")
 
     selected_palette = random.choice(COLOR_PALETTES)
-    sender_handle_color = "#3A9EC7"  # Default color for sender handle
+    sender_handle_color = selected_palette["sender_handle_color"] if "sender_handle_color" in selected_palette else "#3A9EC7" # Get sender_handle_color from palette or use default
+    message_color = selected_palette["message_color"] # Get message_color from palette
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
         sender_initial=sender_initial,
         sender_handle=sender_handle,
         timestamp=timestamp,
-        message=formatted_message,
+        message_content=formatted_message, # Pass message_content instead of message
         sender_handle_color=sender_handle_color,
-        **{k: v for k, v in selected_palette.items() if k != 'sender_handle'}
+        message_color=message_color, # Pass message_color
+        **{k: v for k, v in selected_palette.items() if k not in ['sender_handle_color', 'message_color']}
     )
 
     temp_dir = tempfile.gettempdir()
