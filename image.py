@@ -84,23 +84,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             color: #3A9EC7;
         }}
-        /* Completely removed hamburger menu and replaced with horizontal three dots */
         .menu-dots {{
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: row;
+            gap: 20px;
             margin-top: 16px;
-            cursor: pointer;
         }}
         .menu-dots span {{
-            width: 6px;
-            height: 6px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: #9CA3AF;
-            transition: all 0.2s ease;
-        }}
-        .menu-dots:hover span {{
-            background: #6B7280;
+            background: #D0D5DD;
         }}
         .message {{
             font-size: 42px;
@@ -109,7 +103,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             word-break: break-word;
         }}
-        /* Increased spacing between username and message */
         .profile + .message {{
             margin-top: 40px;
         }}
@@ -154,8 +147,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <div class="sender-handle">{sender_handle}</div>
                     </div>
                 </div>
-                <!-- Replaced hamburger menu with horizontal three dots -->
-                <div class="menu-dots" aria-label="Menu options">
+                <div class="menu-dots" aria-hidden="true">
                     <span></span>
                     <span></span>
                     <span></span>
