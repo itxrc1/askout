@@ -13,7 +13,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(212, 74, 82, 0.08)",
         "sender_name": "#1F2933",
         "menu_dots": "#D0D5DD",
-        "message_color": "#1F2933", # Renamed 'message' to 'message_color'
+        "message_color": "#1F2933",
         "hashtag": "#3A9EC7",
         "heart_badge_bg": "#D44A52",
         "heart_badge_shadow": "rgba(212, 74, 82, 0.25)"
@@ -25,7 +25,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(0, 188, 212, 0.08)",
         "sender_name": "#263238",
         "menu_dots": "#B2EBF2",
-        "message_color": "#263238", # Renamed 'message' to 'message_color'
+        "message_color": "#263238",
         "hashtag": "#0097A7",
         "heart_badge_bg": "#00BCD4",
         "heart_badge_shadow": "rgba(0, 188, 212, 0.25)"
@@ -37,7 +37,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(156, 39, 176, 0.08)",
         "sender_name": "#4A148C",
         "menu_dots": "#E1BEE7",
-        "message_color": "#4A148C", # Renamed 'message' to 'message_color'
+        "message_color": "#4A148C",
         "hashtag": "#7B1FA2",
         "heart_badge_bg": "#9C27B0",
         "heart_badge_shadow": "rgba(156, 39, 176, 0.25)"
@@ -49,7 +49,7 @@ COLOR_PALETTES = [
         "shadow": "rgba(255, 193, 7, 0.08)",
         "sender_name": "#FF6F00",
         "menu_dots": "#FFECB3",
-        "message_color": "#FF6F00", # Renamed 'message' to 'message_color'
+        "message_color": "#FF6F00",
         "hashtag": "#FFA000",
         "heart_badge_bg": "#FFC107",
         "heart_badge_shadow": "rgba(255, 193, 7, 0.25)"
@@ -61,10 +61,70 @@ COLOR_PALETTES = [
         "shadow": "rgba(76, 175, 80, 0.08)",
         "sender_name": "#2E7D32",
         "menu_dots": "#C8E6C9",
-        "message_color": "#2E7D32", # Renamed 'message' to 'message_color'
+        "message_color": "#2E7D32",
         "hashtag": "#388E3C",
         "heart_badge_bg": "#4CAF50",
         "heart_badge_shadow": "rgba(76, 175, 80, 0.25)"
+    },
+    {
+        "background": "#F0F4F8",
+        "card_background": "#FFFFFF",
+        "border": "#607D8B",
+        "shadow": "rgba(96, 125, 139, 0.08)",
+        "sender_name": "#263238",
+        "menu_dots": "#CFD8DC",
+        "message_color": "#263238",
+        "hashtag": "#455A64",
+        "heart_badge_bg": "#607D8B",
+        "heart_badge_shadow": "rgba(96, 125, 139, 0.25)"
+    },
+    {
+        "background": "#FCE4EC",
+        "card_background": "#FFFFFF",
+        "border": "#E91E63",
+        "shadow": "rgba(233, 30, 99, 0.08)",
+        "sender_name": "#880E4F",
+        "menu_dots": "#F8BBD0",
+        "message_color": "#880E4F",
+        "hashtag": "#C2185B",
+        "heart_badge_bg": "#E91E63",
+        "heart_badge_shadow": "rgba(233, 30, 99, 0.25)"
+    },
+    {
+        "background": "#E3F2FD",
+        "card_background": "#FFFFFF",
+        "border": "#2196F3",
+        "shadow": "rgba(33, 150, 243, 0.08)",
+        "sender_name": "#1565C0",
+        "menu_dots": "#BBDEFB",
+        "message_color": "#1565C0",
+        "hashtag": "#1976D2",
+        "heart_badge_bg": "#2196F3",
+        "heart_badge_shadow": "rgba(33, 150, 243, 0.25)"
+    },
+    {
+        "background": "#FBE9E7",
+        "card_background": "#FFFFFF",
+        "border": "#FF5722",
+        "shadow": "rgba(255, 87, 34, 0.08)",
+        "sender_name": "#D84315",
+        "menu_dots": "#FFCCBC",
+        "message_color": "#D84315",
+        "hashtag": "#E64A19",
+        "heart_badge_bg": "#FF5722",
+        "heart_badge_shadow": "rgba(255, 87, 34, 0.25)"
+    },
+    {
+        "background": "#F1F8E9",
+        "card_background": "#FFFFFF",
+        "border": "#8BC34A",
+        "shadow": "rgba(139, 195, 74, 0.08)",
+        "sender_name": "#558B2F",
+        "menu_dots": "#DCEDC8",
+        "message_color": "#558B2F",
+        "hashtag": "#689F38",
+        "heart_badge_bg": "#8BC34A",
+        "heart_badge_shadow": "rgba(139, 195, 74, 0.25)"
     }
 ]
 
