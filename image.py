@@ -3,6 +3,75 @@ import tempfile
 import uuid
 import imgkit
 import re
+import random # Import random for color selection
+
+COLOR_PALETTES = [
+    {
+        "background": "#FFF5EF",
+        "card_background": "#FFFFFF",
+        "border": "#D44A52",
+        "shadow": "rgba(212, 74, 82, 0.08)",
+        "sender_name": "#1F2933",
+        "sender_handle": "#3A9EC7",
+        "menu_dots": "#D0D5DD",
+        "message": "#1F2933",
+        "hashtag": "#3A9EC7",
+        "heart_badge_bg": "#D44A52",
+        "heart_badge_shadow": "rgba(212, 74, 82, 0.25)"
+    },
+    {
+        "background": "#E0F7FA",
+        "card_background": "#FFFFFF",
+        "border": "#00BCD4",
+        "shadow": "rgba(0, 188, 212, 0.08)",
+        "sender_name": "#263238",
+        "sender_handle": "#0097A7",
+        "menu_dots": "#B2EBF2",
+        "message": "#263238",
+        "hashtag": "#0097A7",
+        "heart_badge_bg": "#00BCD4",
+        "heart_badge_shadow": "rgba(0, 188, 212, 0.25)"
+    },
+    {
+        "background": "#F3E5F5",
+        "card_background": "#FFFFFF",
+        "border": "#9C27B0",
+        "shadow": "rgba(156, 39, 176, 0.08)",
+        "sender_name": "#4A148C",
+        "sender_handle": "#7B1FA2",
+        "menu_dots": "#E1BEE7",
+        "message": "#4A148C",
+        "hashtag": "#7B1FA2",
+        "heart_badge_bg": "#9C27B0",
+        "heart_badge_shadow": "rgba(156, 39, 176, 0.25)"
+    },
+    {
+        "background": "#FFFDE7",
+        "card_background": "#FFFFFF",
+        "border": "#FFC107",
+        "shadow": "rgba(255, 193, 7, 0.08)",
+        "sender_name": "#FF6F00",
+        "sender_handle": "#FFA000",
+        "menu_dots": "#FFECB3",
+        "message": "#FF6F00",
+        "hashtag": "#FFA000",
+        "heart_badge_bg": "#FFC107",
+        "heart_badge_shadow": "rgba(255, 193, 7, 0.25)"
+    },
+    {
+        "background": "#E8F5E9",
+        "card_background": "#FFFFFF",
+        "border": "#4CAF50",
+        "shadow": "rgba(76, 175, 80, 0.08)",
+        "sender_name": "#2E7D32",
+        "sender_handle": "#388E3C",
+        "menu_dots": "#C8E6C9",
+        "message": "#2E7D32",
+        "hashtag": "#388E3C",
+        "heart_badge_bg": "#4CAF50",
+        "heart_badge_shadow": "rgba(76, 175, 80, 0.25)"
+    }
+]
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
@@ -21,7 +90,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
-            background: #FFF5EF;
+            background: {background}; /* Use dynamic background color */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,7 +100,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             position: relative;
             width: 1200px;
             padding: 96px 88px 120px;
-            background: #FFF5EF;
+            background: {background}; /* Use dynamic background color */
             border-radius: 56px;
         }}
         .stage::before {{
@@ -47,14 +116,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         .card {{
             position: relative;
-            background: #FFFFFF;
-            border: 3px solid #D44A52;
+            background: {card_background}; /* Use dynamic card background color */
+            border: 3px solid {border}; /* Use dynamic border color */
             border-radius: 36px;
             padding: 72px 76px 96px;
             display: flex;
             flex-direction: column;
             gap: 48px;
-            box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
+            box-shadow: 0 28px 70px {shadow}; /* Use dynamic shadow color */
         }}
         .profile {{
             display: flex;
@@ -75,14 +144,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .sender-name {{
             font-size: 44px;
             font-weight: 700;
-            color: #1F2933;
+            color: {sender_name}; /* Use dynamic sender name color */
             letter-spacing: -0.015em;
             text-wrap: balance;
         }}
         .sender-handle {{
             font-size: 26px;
             font-weight: 500;
-            color: #3A9EC7;
+            color: {sender_handle}; /* Use dynamic sender handle color */
         }}
         .menu-dots {{
             display: flex;
@@ -94,12 +163,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #D0D5DD;
+            background: {menu_dots}; /* Use dynamic menu dots color */
         }}
         .message {{
             font-size: 42px;
             line-height: 1.65;
-            color: #1F2933;
+            color: {message}; /* Use dynamic message color */
             font-weight: 500;
             word-break: break-word;
         }}
@@ -107,7 +176,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-top: 40px;
         }}
         .message .hashtag {{
-            color: #3A9EC7;
+            color: {hashtag}; /* Use dynamic hashtag color */
             font-weight: 600;
         }}
         .heart-badge {{
@@ -117,11 +186,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 96px;
             height: 96px;
             border-radius: 50%;
-            background: #D44A52;
+            background: {heart_badge_bg}; /* Use dynamic heart badge background color */
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
+            box-shadow: 0 20px 40px {heart_badge_shadow}; /* Use dynamic heart badge shadow color */
         }}
         .heart-badge svg {{
             width: 40px;
@@ -181,12 +250,15 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     hashtagged = re.sub(r"(?<!\w)#([A-Za-z0-9_]+)", r'<span class="hashtag">#\1</span>', text)
     formatted_message = hashtagged.replace("\n", "<br>")
 
+    selected_palette = random.choice(COLOR_PALETTES)
+
     html_content = HTML_TEMPLATE.format(
         sender=sender,
         sender_initial=sender_initial,
         sender_handle=sender_handle,
         timestamp=timestamp,
-        message=formatted_message
+        message=formatted_message,
+        **selected_palette # Pass the selected palette colors to the template
     )
 
     temp_dir = tempfile.gettempdir()
