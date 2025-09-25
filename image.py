@@ -54,9 +54,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             flex-direction: column;
             box-shadow: 0 28px 70px rgba(137, 247, 254, 0.15);
         }}
-        /* Updated gradient header with holographic colors matching the reference image */
+        /* Updated gradient header with more modern, tech-inspired holographic colors */
         .gradient-header {{
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 15%, #d299c2 30%, #fef9d7 45%, #89f7fe 60%, #66a6ff 75%, #c2e9fb 90%, #a8edea 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 15%, #89f7fe 30%, #66a6ff 45%, #4facfe 60%, #00f2fe 75%, #4facfe 90%, #667eea 100%);
             padding: 48px 76px 32px;
             position: relative;
             border-top-left-radius: 33px;
@@ -127,7 +127,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             color: #3A9EC7;
             font-weight: 600;
         }}
-        /* Updated heart badge to match holographic theme */
+        /* Updated heart badge to match the new tech-inspired holographic theme */
         .heart-badge {{
             position: absolute;
             right: 84px;
@@ -135,11 +135,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             width: 96px;
             height: 96px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 50%, #a8edea 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #89f7fe 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 20px 40px rgba(137, 247, 254, 0.3);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
         }}
         .heart-badge svg {{
             width: 40px;
