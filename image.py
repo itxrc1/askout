@@ -84,20 +84,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             color: #3A9EC7;
         }}
-        /* Replaced three dots with hamburger menu icon */
-        .menu-icon {{
+        /* Completely removed hamburger menu and replaced with horizontal three dots */
+        .menu-dots {{
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            align-items: center;
+            gap: 8px;
             margin-top: 16px;
             cursor: pointer;
         }}
-        .menu-icon span {{
-            width: 24px;
-            height: 3px;
-            border-radius: 2px;
+        .menu-dots span {{
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
             background: #9CA3AF;
             transition: all 0.2s ease;
+        }}
+        .menu-dots:hover span {{
+            background: #6B7280;
         }}
         .message {{
             font-size: 42px;
@@ -151,8 +154,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <div class="sender-handle">{sender_handle}</div>
                     </div>
                 </div>
-                <!-- Replaced dots with hamburger menu icon -->
-                <div class="menu-icon" aria-hidden="true">
+                <!-- Replaced hamburger menu with horizontal three dots -->
+                <div class="menu-dots" aria-label="Menu options">
                     <span></span>
                     <span></span>
                     <span></span>
