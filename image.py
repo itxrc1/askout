@@ -129,7 +129,8 @@ COLOR_PALETTES = [
     {
         "background": "linear-gradient(135deg, #E0F7FA, #B2EBF2)", # Blue to light blue gradient
         "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
-        "border": "#00BCD4",
+        "border": "#00BCD4", # Fallback solid border color
+        "border_gradient": "linear-gradient(to right, #00BCD4, #0097A7)", # Gradient border
         "shadow": "rgba(0, 188, 212, 0.15)",
         "sender_name": "#263238",
         "menu_dots": "#B2EBF2",
@@ -141,7 +142,8 @@ COLOR_PALETTES = [
     {
         "background": "linear-gradient(135deg, #F3E5F5, #E1BEE7)", # Purple to light purple gradient
         "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
-        "border": "#9C27B0",
+        "border": "#9C27B0", # Fallback solid border color
+        "border_gradient": "linear-gradient(to right, #9C27B0, #7B1FA2)", # Gradient border
         "shadow": "rgba(156, 39, 176, 0.15)",
         "sender_name": "#4A148C",
         "menu_dots": "#E1BEE7",
@@ -153,7 +155,8 @@ COLOR_PALETTES = [
     {
         "background": "linear-gradient(135deg, #FFFDE7, #FFECB3)", # Yellow to light yellow gradient
         "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
-        "border": "#FFC107",
+        "border": "#FFC107", # Fallback solid border color
+        "border_gradient": "linear-gradient(to right, #FFC107, #FFA000)", # Gradient border
         "shadow": "rgba(255, 193, 7, 0.15)",
         "sender_name": "#FF6F00",
         "menu_dots": "#FFECB3",
@@ -165,7 +168,8 @@ COLOR_PALETTES = [
     {
         "background": "linear-gradient(135deg, #E8F5E9, #C8E6C9)", # Green to light green gradient
         "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
-        "border": "#4CAF50",
+        "border": "#4CAF50", # Fallback solid border color
+        "border_gradient": "linear-gradient(to right, #4CAF50, #388E3C)", # Gradient border
         "shadow": "rgba(76, 175, 80, 0.15)",
         "sender_name": "#2E7D32",
         "menu_dots": "#C8E6C9",
@@ -173,6 +177,45 @@ COLOR_PALETTES = [
         "hashtag": "#388E3C",
         "heart_badge_bg": "#4CAF50",
         "heart_badge_shadow": "rgba(76, 175, 80, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #FFD1DC, #FFABAB)", # Pink to light pink gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F8F8F8)",
+        "border": "#FF69B4",
+        "border_gradient": "linear-gradient(to right, #FF69B4, #FF1493)",
+        "shadow": "rgba(255, 105, 180, 0.15)",
+        "sender_name": "#C71585",
+        "menu_dots": "#FFC0CB",
+        "message_color": "#C71585",
+        "hashtag": "#DB7093",
+        "heart_badge_bg": "#FF69B4",
+        "heart_badge_shadow": "rgba(255, 105, 180, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #ADD8E6, #87CEEB)", # Light blue to sky blue gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F8F8F8)",
+        "border": "#4682B4",
+        "border_gradient": "linear-gradient(to right, #4682B4, #1E90FF)",
+        "shadow": "rgba(70, 130, 180, 0.15)",
+        "sender_name": "#191970",
+        "menu_dots": "#B0E0E6",
+        "message_color": "#191970",
+        "hashtag": "#6A5ACD",
+        "heart_badge_bg": "#4682B4",
+        "heart_badge_shadow": "rgba(70, 130, 180, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #FFEFD5, #FFE4B5)", # Papaya whip to moccasin gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F8F8F8)",
+        "border": "#FFD700",
+        "border_gradient": "linear-gradient(to right, #FFD700, #DAA520)",
+        "shadow": "rgba(255, 215, 0, 0.15)",
+        "sender_name": "#B8860B",
+        "menu_dots": "#FFEBCD",
+        "message_color": "#B8860B",
+        "hashtag": "#CD853F",
+        "heart_badge_bg": "#FFD700",
+        "heart_badge_shadow": "rgba(255, 215, 0, 0.25)"
     }
 ]
 
@@ -220,7 +263,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card {{
             position: relative;
             background: {card_background}; /* Use dynamic card background color */
-            border: 3px solid {border}; /* Use dynamic border color */
+            border: 3px solid transparent; /* Make border transparent to show border-image */
+            border-image: {border_gradient} 1; /* Apply gradient border */
+            border-image-slice: 1;
             border-radius: 36px;
             padding: 72px 76px 96px;
             display: flex;
@@ -356,6 +401,7 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
     selected_palette = random.choice(COLOR_PALETTES)
     sender_handle_color = selected_palette["sender_handle_color"] if "sender_handle_color" in selected_palette else "#3A9EC7" # Get sender_handle_color from palette or use default
     message_color = selected_palette["message_color"] # Get message_color from palette
+    border_gradient = selected_palette.get('border_gradient', f"linear-gradient(to right, {selected_palette['border']}, {selected_palette['border']})") # Get border_gradient from palette or create a solid gradient if not present
 
     html_content = HTML_TEMPLATE.format(
         sender=sender,
@@ -365,7 +411,8 @@ def generate_message_image(text: str, name: str = "Askout Bot") -> str:
         message_content=formatted_message, # Pass message_content instead of message
         sender_handle_color=sender_handle_color,
         message_color=message_color, # Pass message_color
-        **{k: v for k, v in selected_palette.items() if k not in ['sender_handle_color', 'message_color']}
+        border_gradient=border_gradient, # Pass border_gradient
+        **{k: v for k, v in selected_palette.items() if k not in ['sender_handle_color', 'message_color', 'border_gradient']}
     )
 
     temp_dir = tempfile.gettempdir()
