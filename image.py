@@ -87,7 +87,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .menu-dots {{
             display: flex;
             flex-direction: row;
-            gap: 4px;
+            gap: 20px;
             margin-top: 16px;
         }}
         .menu-dots span {{
@@ -104,7 +104,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             word-break: break-word;
         }}
         .profile + .message {{
-            margin-top: 8px;
+            margin-top: 40px;
         }}
         .message .hashtag {{
             color: #3A9EC7;
