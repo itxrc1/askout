@@ -125,6 +125,54 @@ COLOR_PALETTES = [
         "hashtag": "#689F38",
         "heart_badge_bg": "#8BC34A",
         "heart_badge_shadow": "rgba(139, 195, 74, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #E0F7FA, #B2EBF2)", # Blue to light blue gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
+        "border": "#00BCD4",
+        "shadow": "rgba(0, 188, 212, 0.15)",
+        "sender_name": "#263238",
+        "menu_dots": "#B2EBF2",
+        "message_color": "#263238",
+        "hashtag": "#0097A7",
+        "heart_badge_bg": "#00BCD4",
+        "heart_badge_shadow": "rgba(0, 188, 212, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #F3E5F5, #E1BEE7)", # Purple to light purple gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
+        "border": "#9C27B0",
+        "shadow": "rgba(156, 39, 176, 0.15)",
+        "sender_name": "#4A148C",
+        "menu_dots": "#E1BEE7",
+        "message_color": "#4A148C",
+        "hashtag": "#7B1FA2",
+        "heart_badge_bg": "#9C27B0",
+        "heart_badge_shadow": "rgba(156, 39, 176, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #FFFDE7, #FFECB3)", # Yellow to light yellow gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
+        "border": "#FFC107",
+        "shadow": "rgba(255, 193, 7, 0.15)",
+        "sender_name": "#FF6F00",
+        "menu_dots": "#FFECB3",
+        "message_color": "#FF6F00",
+        "hashtag": "#FFA000",
+        "heart_badge_bg": "#FFC107",
+        "heart_badge_shadow": "rgba(255, 193, 7, 0.25)"
+    },
+    {
+        "background": "linear-gradient(135deg, #E8F5E9, #C8E6C9)", # Green to light green gradient
+        "card_background": "linear-gradient(135deg, #FFFFFF, #F5F5F5)",
+        "border": "#4CAF50",
+        "shadow": "rgba(76, 175, 80, 0.15)",
+        "sender_name": "#2E7D32",
+        "menu_dots": "#C8E6C9",
+        "message_color": "#2E7D32",
+        "hashtag": "#388E3C",
+        "heart_badge_bg": "#4CAF50",
+        "heart_badge_shadow": "rgba(76, 175, 80, 0.25)"
     }
 ]
 
