@@ -9,10 +9,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <title>Askout Message Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {{
             color-scheme: light;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #ffffff;
+            --surface-bg: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --accent-color: #3b82f6;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(15, 23, 42, 0.08);
+            --heart-bg: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }}
         * {{
             box-sizing: border-box;
@@ -20,8 +29,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         body {{
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
-            background: #FFF5EF;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--surface-bg);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,31 +39,46 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .stage {{
             position: relative;
             width: 1200px;
-            padding: 96px 88px 120px;
-            background: #FFF5EF;
-            border-radius: 56px;
+            padding: 80px 60px 100px;
+            background: var(--surface-bg);
+            border-radius: 32px;
         }}
         .stage::before {{
             content: "";
             position: absolute;
-            top: 28px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 160px;
-            height: 20px;
+            width: 140px;
+            height: 6px;
             border-radius: 999px;
-            background: rgba(15, 23, 42, 0.08);
+            background: var(--primary-gradient);
+            opacity: 0.6;
         }}
         .card {{
             position: relative;
-            background: #FFFFFF;
-            border: 3px solid #D44A52;
-            border-radius: 36px;
-            padding: 72px 76px 96px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 60px 64px 80px;
             display: flex;
             flex-direction: column;
-            gap: 48px;
-            box-shadow: 0 28px 70px rgba(212, 74, 82, 0.08);
+            gap: 40px;
+            box-shadow: 
+                0 20px 25px -5px var(--shadow-color),
+                0 10px 10px -5px rgba(15, 23, 42, 0.04),
+                0 0 0 1px rgba(15, 23, 42, 0.05);
+            backdrop-filter: blur(10px);
+        }}
+        .card::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 24px 24px 0 0;
         }}
         .profile {{
             display: flex;
@@ -65,68 +89,105 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .profile-left {{
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
+        }}
+        .avatar {{
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }}
         .profile-meta {{
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }}
         .sender-name {{
-            font-size: 44px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
             font-weight: 700;
-            color: #1F2933;
-            letter-spacing: -0.015em;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
             text-wrap: balance;
+            line-height: 1.1;
         }}
         .sender-handle {{
-            font-size: 26px;
+            font-size: 20px;
             font-weight: 500;
-            color: #3A9EC7;
+            color: var(--accent-color);
+            opacity: 0.8;
         }}
         .menu-dots {{
             display: flex;
             flex-direction: row;
-            gap: 12px;
-            margin-top: 16px;
+            gap: 8px;
+            margin-top: 8px;
         }}
         .menu-dots span {{
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #D0D5DD;
+            background: var(--text-secondary);
+            opacity: 0.4;
         }}
         .message {{
-            font-size: 42px;
-            line-height: 1.65;
-            color: #1F2933;
+            font-size: 32px;
+            line-height: 1.6;
+            color: var(--text-primary);
             font-weight: 500;
             word-break: break-word;
+            letter-spacing: -0.01em;
         }}
         .profile + .message {{
-            margin-top: 20px;
+            margin-top: 16px;
         }}
         .message .hashtag {{
-            color: #3A9EC7;
+            color: var(--accent-color);
             font-weight: 600;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 2px 8px;
+            border-radius: 8px;
+            text-decoration: none;
         }}
         .heart-badge {{
             position: absolute;
-            right: 84px;
-            bottom: -38px;
-            width: 96px;
-            height: 96px;
+            right: 64px;
+            bottom: -32px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: #D44A52;
+            background: var(--heart-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 20px 40px rgba(212, 74, 82, 0.25);
+            box-shadow: 
+                0 20px 25px -5px rgba(245, 87, 108, 0.25),
+                0 10px 10px -5px rgba(245, 87, 108, 0.1);
+            border: 3px solid var(--card-bg);
         }}
         .heart-badge svg {{
-            width: 40px;
-            height: 40px;
-            fill: #FFFFFF;
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }}
+        .heart-badge::before {{
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: var(--heart-bg);
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(8px);
         }}
         img.emoji {{
             height: 1.1em;
@@ -134,14 +195,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin: 0 .05em;
             vertical-align: -0.15em;
         }}
+        .timestamp {{
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            font-weight: 500;
+        }}
     </style>
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="stage" role="presentation">
         <article class="card" aria-labelledby="sender-name">
+            <div class="timestamp">Just now</div>
             <header class="profile">
                 <div class="profile-left">
+                    <div class="avatar">{sender_initial}</div>
                     <div class="profile-meta">
                         <div class="sender-name" id="sender-name">{sender}</div>
                         <div class="sender-handle">{sender_handle}</div>
