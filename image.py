@@ -84,17 +84,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             color: #3A9EC7;
         }}
-        .menu-dots {{
+        /* Replaced three dots with hamburger menu icon */
+        .menu-icon {{
             display: flex;
-            flex-direction: row;
-            gap: 20px;
+            flex-direction: column;
+            gap: 4px;
             margin-top: 16px;
+            cursor: pointer;
         }}
-        .menu-dots span {{
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #D0D5DD;
+        .menu-icon span {{
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+            background: #9CA3AF;
+            transition: all 0.2s ease;
         }}
         .message {{
             font-size: 42px;
@@ -103,6 +106,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-weight: 500;
             word-break: break-word;
         }}
+        /* Increased spacing between username and message */
         .profile + .message {{
             margin-top: 40px;
         }}
@@ -147,7 +151,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <div class="sender-handle">{sender_handle}</div>
                     </div>
                 </div>
-                <div class="menu-dots" aria-hidden="true">
+                <!-- Replaced dots with hamburger menu icon -->
+                <div class="menu-icon" aria-hidden="true">
                     <span></span>
                     <span></span>
                     <span></span>
